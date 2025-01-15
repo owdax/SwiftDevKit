@@ -1,5 +1,8 @@
-// The Swift Programming Language
-// https://docs.swift.org/swift-book
+// SwiftDevKit.swift
+// SwiftDevKit
+//
+// Copyright (c) 2025 owdax and The SwiftDevKit Contributors
+// MIT License - https://opensource.org/licenses/MIT
 
 /// SwiftDevKit
 ///
@@ -27,7 +30,7 @@
 public enum SwiftDevKit {
     /// The current version of SwiftDevKit
     public static let version = "1.0.0"
-    
+
     /// Validates if the current environment meets the minimum requirements
     public static var isEnvironmentValid: Bool {
         #if os(iOS)
