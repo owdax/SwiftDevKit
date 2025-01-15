@@ -4,10 +4,21 @@
 [![SPM](https://img.shields.io/badge/SPM-compatible-brightgreen.svg)](https://swift.org/package-manager)
 [![Platform](https://img.shields.io/badge/Platforms-iOS%20|%20macOS%20|%20tvOS%20|%20watchOS-lightgrey.svg)](https://developer.apple.com/swift/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-In%20Development-yellow.svg)]()
 
-A comprehensive Swift SDK providing a rich collection of developer tools and utilities. SwiftDevKit aims to be your go-to toolkit for common development tasks, offering a wide range of functionalities from data conversion to code generation.
+Think of it as your Swiss Army knife for Swift development - all the tools you need, right in your native environment.
 
-## Features
+> ⚠️ **Project Status**: Active Development
+> 
+> SwiftDevKit is currently in active development. The API is unstable and subject to change. While we're working hard to make it production-ready, it's not recommended for production use yet.
+> 
+> Want to contribute? Check out our [Contributing Guidelines](CONTRIBUTING.md)!
+
+## Vision
+
+SwiftDevKit aims to be your go-to toolkit for common development tasks, offering a wide range of functionalities from data conversion to code generation. Our goal is to provide a comprehensive, well-tested, and professionally crafted SDK that brings the power of web-based developer tools natively to Swift.
+
+## Planned Features
 
 - 🛠 Comprehensive utility functions
 - 📦 Modular architecture
@@ -26,9 +37,9 @@ A comprehensive Swift SDK providing a rich collection of developer tools and uti
 
 ## Installation
 
-### Swift Package Manager
+> ⚠️ Note: These installation methods will be available once we reach our first stable release.
 
-Add the following to your `Package.swift` file:
+### Swift Package Manager (Coming Soon)
 
 ```swift
 dependencies: [
@@ -36,30 +47,28 @@ dependencies: [
 ]
 ```
 
-### CocoaPods
-
-Add the following to your Podfile:
+### CocoaPods (Coming Soon)
 
 ```ruby
 pod 'SwiftDevKit'
 ```
 
-## Usage
+## Development Roadmap
 
-Import the package in your source files:
+1. 🏗 Core Infrastructure (In Progress)
+   - Setting up development tools
+   - Establishing CI/CD pipeline
+   - Code quality tools integration
 
-```swift
-import SwiftDevKit
-```
+2. 🧰 Core Features (Planned)
+   - Data Conversion utilities
+   - Text Processing tools
+   - Development helpers
 
-## Documentation
-
-Comprehensive documentation is available at [docs link placeholder]. The documentation includes:
-
-- Detailed API reference
-- Usage examples
-- Best practices
-- Implementation guidelines
+3. 🔒 Advanced Features (Planned)
+   - Cryptography utilities
+   - Platform-specific optimizations
+   - Advanced debugging tools
 
 ## Contributing
 
