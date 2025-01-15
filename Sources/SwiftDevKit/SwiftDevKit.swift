@@ -34,15 +34,15 @@ public enum SwiftDevKit {
     /// Validates if the current environment meets the minimum requirements
     public static var isEnvironmentValid: Bool {
         #if os(iOS)
-            return true
+        return true
         #elseif os(macOS)
-            return true
+        return true
         #elseif os(tvOS)
-            return true
+        return true
         #elseif os(watchOS)
-            return true
+        return true
         #else
-            return false
+        return false
         #endif
     }
 }

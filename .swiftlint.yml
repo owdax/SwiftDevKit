@@ -6,6 +6,7 @@ excluded:
 
 disabled_rules:
   - trailing_comma
+  - comment_spacing
 
 opt_in_rules:
   - array_init
@@ -49,13 +50,6 @@ opt_in_rules:
 analyzer_rules:
   - explicit_self
   - unused_import
-
-custom_rules:
-  comments_space:
-    name: "Space After Comment"
-    regex: '//\S'
-    message: "There should be a space after //"
-    severity: warning
 
 force_cast: error
 force_try: error
