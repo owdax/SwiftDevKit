@@ -7,7 +7,7 @@ let package = Package(
     name: "SwiftDevKit",
     platforms: [
         .iOS(.v13),
-        .macOS(.v10_15),
+        .macOS("10.15.4"),
         .tvOS(.v13),
         .watchOS(.v6),
     ],
@@ -28,13 +28,13 @@ let package = Package(
         .target(
             name: "SwiftDevKit",
             dependencies: [],
+            resources: [
+                .process("Resources")
+            ],
             swiftSettings: [
                 .define("DEBUG", .when(configuration: .debug)),
                 .enableUpcomingFeature("BareSlashRegexLiterals"),
                 .enableExperimentalFeature("StrictConcurrency"),
-            ],
-            plugins: [
-                .plugin(name: "Swift-DocC", package: "swift-docc-plugin"),
             ]),
         .testTarget(
             name: "SwiftDevKitTests",
