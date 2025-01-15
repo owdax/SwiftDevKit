@@ -20,6 +20,7 @@ let package = Package(
     dependencies: [
         // Dependencies will be added as needed
         .package(url: "https://github.com/apple/swift-testing.git", from: "0.5.0"),
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -31,6 +32,9 @@ let package = Package(
                 .define("DEBUG", .when(configuration: .debug)),
                 .enableUpcomingFeature("BareSlashRegexLiterals"),
                 .enableExperimentalFeature("StrictConcurrency"),
+            ],
+            plugins: [
+                .plugin(name: "Swift-DocC", package: "swift-docc-plugin"),
             ]),
         .testTarget(
             name: "SwiftDevKitTests",
