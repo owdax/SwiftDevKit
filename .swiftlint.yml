@@ -2,6 +2,7 @@ excluded:
   - .build
   - Package.swift
   - Tests/*/XCTestManifests.swift
+  - Sources/SwiftDevKit/Generated
 
 disabled_rules:
   - trailing_comma
@@ -19,7 +20,6 @@ opt_in_rules:
   - empty_count
   - empty_string
   - explicit_init
-  - explicit_self
   - fatal_error_message
   - first_where
   - force_unwrapping
@@ -41,7 +41,6 @@ opt_in_rules:
   - strict_fileprivate
   - toggle_bool
   - unneeded_parentheses_in_closure_argument
-  - unused_import
   - vertical_parameter_alignment_on_call
   - vertical_whitespace_closing_braces
   - vertical_whitespace_opening_braces

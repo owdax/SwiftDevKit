@@ -8,6 +8,7 @@ import Testing
 @testable import SwiftDevKit
 
 // MARK: - Core Tests
+
 @Test
 func versionTest() async throws {
     #expect(SwiftDevKit.version == "1.0.0", "Version should match the current release")
@@ -19,15 +20,16 @@ func environmentValidationTest() async throws {
 }
 
 // MARK: - Platform Support Tests
+
 @Test
 func platformSupportTest() async throws {
     #if os(iOS)
-    #expect(SwiftDevKit.isEnvironmentValid, "Should support iOS")
+        #expect(SwiftDevKit.isEnvironmentValid, "Should support iOS")
     #elseif os(macOS)
-    #expect(SwiftDevKit.isEnvironmentValid, "Should support macOS")
+        #expect(SwiftDevKit.isEnvironmentValid, "Should support macOS")
     #elseif os(tvOS)
-    #expect(SwiftDevKit.isEnvironmentValid, "Should support tvOS")
+        #expect(SwiftDevKit.isEnvironmentValid, "Should support tvOS")
     #elseif os(watchOS)
-    #expect(SwiftDevKit.isEnvironmentValid, "Should support watchOS")
+        #expect(SwiftDevKit.isEnvironmentValid, "Should support watchOS")
     #endif
 }
