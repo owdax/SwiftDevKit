@@ -21,7 +21,7 @@ A comprehensive Swift SDK providing a rich collection of developer tools and uti
 ## Requirements
 
 - iOS 13.0+ / macOS 10.15+ / tvOS 13.0+ / watchOS 6.0+
-- Xcode 15+
+- Xcode 16.0+
 - Swift 5.9+
 
 ## Installation

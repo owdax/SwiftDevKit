@@ -1,0 +1,43 @@
+name: Swift
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    strategy:
+      matrix:
+        os: [macos-latest]
+        xcode: ['16.0']
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Select Xcode
+      run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
+      
+    - name: Build
+      run: swift build -v
+      
+    - name: Run tests
+      run: swift test -v
+      
+    - name: Build Documentation
+      run: swift doc generate Sources --module-name SwiftDevKit
+      
+  lint:
+    name: Swift Lint
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: SwiftLint
+      run: |
+        brew install swiftlint
+        swiftlint lint --reporter github-actions-logging 
