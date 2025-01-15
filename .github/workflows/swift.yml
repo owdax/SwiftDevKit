@@ -9,12 +9,12 @@ on:
   workflow_dispatch:
 
 env:
-  DEVELOPER_DIR: /Applications/Xcode_16.0.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
 
 jobs:
   analyze:
     name: Analyze
-    runs-on: macos-latest
+    runs-on: macos-14
     permissions:
       actions: read
       contents: read
@@ -39,7 +39,7 @@ jobs:
   test:
     name: Test
     needs: analyze
-    runs-on: macos-latest
+    runs-on: macos-14
     
     steps:
     - uses: actions/checkout@v4
@@ -61,7 +61,7 @@ jobs:
 
   lint:
     name: Lint
-    runs-on: macos-latest
+    runs-on: macos-14
     
     steps:
     - uses: actions/checkout@v4
@@ -74,7 +74,7 @@ jobs:
   docs:
     name: Documentation
     needs: test
-    runs-on: macos-latest
+    runs-on: macos-14
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     
     steps:
@@ -93,7 +93,7 @@ jobs:
   release:
     name: Create Release
     needs: [test, lint, docs]
-    runs-on: macos-latest
+    runs-on: macos-14
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     
     steps:
