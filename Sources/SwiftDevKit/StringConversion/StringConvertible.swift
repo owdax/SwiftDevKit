@@ -1,3 +1,9 @@
+// StringConvertible.swift
+// SwiftDevKit
+//
+// Copyright (c) 2025 owdax and The SwiftDevKit Contributors
+// MIT License - https://opensource.org/licenses/MIT
+
 import Foundation
 
 /// A type that can be converted to and from a string representation.
@@ -10,7 +16,7 @@ public protocol StringConvertible {
     /// - Returns: A string representation of the instance.
     /// - Throws: `StringConversionError` if the conversion fails.
     func toString() throws -> String
-    
+
     /// Creates an instance from its string representation.
     ///
     /// - Parameter string: The string to convert from.
@@ -27,15 +33,15 @@ public enum StringConversionError: Error, LocalizedError, Equatable {
     case unsupportedConversion
     /// A custom error with a specific message.
     case custom(String)
-    
+
     public var errorDescription: String? {
         switch self {
-        case .invalidInput(let value):
-            return "Invalid input string: \(value)"
-        case .unsupportedConversion:
-            return "Unsupported conversion operation"
-        case .custom(let message):
-            return message
+            case .invalidInput(let value):
+                return "Invalid input string: \(value)"
+            case .unsupportedConversion:
+                return "Unsupported conversion operation"
+            case .custom(let message):
+                return message
         }
     }
-} 
+}

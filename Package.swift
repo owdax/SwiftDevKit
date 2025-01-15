@@ -29,7 +29,7 @@ let package = Package(
             name: "SwiftDevKit",
             dependencies: [],
             resources: [
-                .process("Resources")
+                .process("Resources"),
             ],
             swiftSettings: [
                 .define("DEBUG", .when(configuration: .debug)),
