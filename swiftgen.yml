@@ -1,0 +1,45 @@
+input_dir: Sources/SwiftDevKit/Resources
+output_dir: Sources/SwiftDevKit/Generated
+
+## Strings
+strings:
+  inputs:
+    - Localization/en.lproj
+  outputs:
+    - templateName: structured-swift5
+      params:
+        publicAccess: true
+        enumName: Strings
+      output: Strings+Generated.swift
+
+## Colors
+xcassets:
+  inputs:
+    - Colors.xcassets
+  outputs:
+    - templateName: swift5
+      params:
+        publicAccess: true
+        enumName: Colors
+      output: Colors+Generated.swift
+
+## Files
+files:
+  inputs:
+    - Templates
+  outputs:
+    - templateName: structured-swift5
+      params:
+        publicAccess: true
+        enumName: Files
+      output: Files+Generated.swift
+
+## JSON
+json:
+  inputs:
+    - Configurations
+  outputs:
+    - templateName: runtime-swift5
+      params:
+        publicAccess: true
+      output: JSON+Generated.swift 
