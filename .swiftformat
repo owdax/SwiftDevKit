@@ -1,0 +1,25 @@
+--swiftversion 5.9
+--indent 4
+--indentcase true
+--trimwhitespace always
+--maxwidth 120
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--closingparen same-line
+--commas always
+--comments indent
+--decimalgrouping 3,6
+--exponentcase lowercase
+--exponentgrouping disabled
+--fractiongrouping disabled
+--ifdef indent
+--importgrouping testable-bottom
+--operatorfunc spaced
+--nospaceoperators ..<,...
+--self remove
+--semicolons never
+--stripunusedargs closure-only
+--trailingclosures
+--modifierorder public,private,private(set),fileprivate,internal,static,final,lazy,dynamic,weak,unowned,required,convenience,override,mutating,nonmutating,class,prefix,infix,postfix
+--header "{file}\nSwiftDevKit\n\nCopyright (c) {year} owdax and The SwiftDevKit Contributors\nMIT License - https://opensource.org/licenses/MIT" 

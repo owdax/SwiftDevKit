@@ -3,35 +3,64 @@ name: Swift
 on:
   push:
     branches: [ "master" ]
+    tags: [ "v*" ]
   pull_request:
     branches: [ "master" ]
+  workflow_dispatch:
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode_16.0.app/Contents/Developer
 
 jobs:
-  build-and-test:
-    name: Build and Test
-    strategy:
-      matrix:
-        os: [macos-latest]
-        xcode: ['16.0']
-    runs-on: ${{ matrix.os }}
+  analyze:
+    name: Analyze
+    runs-on: macos-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
 
     steps:
     - uses: actions/checkout@v4
     
-    - name: Select Xcode
-      run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: swift
+    
+    - name: Build
+      run: swift build -v
       
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: "/language:swift"
+
+  test:
+    name: Test
+    needs: analyze
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
     - name: Build
       run: swift build -v
       
     - name: Run tests
-      run: swift test -v
+      run: swift test -v --enable-code-coverage
       
-    - name: Build Documentation
-      run: swift doc generate Sources --module-name SwiftDevKit
+    - name: Convert coverage report
+      run: xcrun llvm-cov export -format="lcov" .build/debug/SwiftDevKitPackageTests.xctest/Contents/MacOS/SwiftDevKitPackageTests -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
       
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: coverage.lcov
+        fail_ci_if_error: true
+
   lint:
-    name: Swift Lint
+    name: Lint
     runs-on: macos-latest
     
     steps:
@@ -40,4 +69,56 @@ jobs:
     - name: SwiftLint
       run: |
         brew install swiftlint
-        swiftlint lint --reporter github-actions-logging 
+        swiftlint lint --reporter github-actions-logging
+        
+  docs:
+    name: Documentation
+    needs: test
+    runs-on: macos-latest
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Generate Documentation
+      run: |
+        swift package --allow-writing-to-directory docs generate-documentation --target SwiftDevKit --output-path docs
+        
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs
+        
+  release:
+    name: Create Release
+    needs: [test, lint, docs]
+    runs-on: macos-latest
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Get Tag
+      id: tag
+      run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
+        
+    - name: Generate Changelog
+      id: changelog
+      run: |
+        previous_tag=$(git describe --tags --abbrev=0 ${{ steps.tag.outputs.tag }}^ 2>/dev/null || echo "")
+        if [ -z "$previous_tag" ]; then
+          git log --pretty=format:"* %s" > CHANGELOG.md
+        else
+          git log --pretty=format:"* %s" $previous_tag..${{ steps.tag.outputs.tag }} > CHANGELOG.md
+        fi
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        body_path: CHANGELOG.md
+        draft: false
+        prerelease: false
+        token: ${{ secrets.GITHUB_TOKEN }} 
