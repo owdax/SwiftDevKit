@@ -22,7 +22,12 @@ jobs:
     
     - name: Setup Swift
       uses: SwiftyLab/setup-swift@latest
-
+      
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: swift
+        
     - name: Build
       run: swift build -v -Xswiftc -swift-version -Xswiftc 6
       
