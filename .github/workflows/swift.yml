@@ -24,7 +24,7 @@ jobs:
       uses: SwiftyLab/setup-swift@latest
       
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v2
       with:
         languages: swift
         
@@ -32,7 +32,7 @@ jobs:
       run: swift build -v -Xswiftc -swift-version -Xswiftc 6
       
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@v2
       with:
         category: "/language:swift"
 
@@ -61,7 +61,9 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         file: coverage.lcov
+        token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: true
+        verbose: true
 
   lint:
     name: Lint
