@@ -36,12 +36,12 @@ public enum StringConversionError: Error, LocalizedError, Equatable {
 
     public var errorDescription: String? {
         switch self {
-        case .invalidInput(let value):
-            return "Invalid input string: \(value)"
-        case .unsupportedConversion:
-            return "Unsupported conversion operation"
-        case .custom(let message):
-            return message
+            case let .invalidInput(value):
+                "Invalid input string: \(value)"
+            case .unsupportedConversion:
+                "Unsupported conversion operation"
+            case let .custom(message):
+                message
         }
     }
 }

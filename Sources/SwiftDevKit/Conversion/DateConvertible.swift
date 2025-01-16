@@ -56,14 +56,14 @@ public enum DateConversionError: Error, LocalizedError, Equatable {
 
     public var errorDescription: String? {
         switch self {
-        case .invalidFormat(let value):
-            return "Date string doesn't match the expected format: \(value)"
-        case .invalidComponents:
-            return "Date contains invalid components"
-        case .invalidFormatString(let format):
-            return "Invalid date format string: \(format)"
-        case .custom(let message):
-            return message
+            case let .invalidFormat(value):
+                "Date string doesn't match the expected format: \(value)"
+            case .invalidComponents:
+                "Date contains invalid components"
+            case let .invalidFormatString(format):
+                "Invalid date format string: \(format)"
+            case let .custom(message):
+                message
         }
     }
 }
@@ -73,35 +73,35 @@ public enum DateConversionError: Error, LocalizedError, Equatable {
 /// This enum provides a set of predefined date format strings that cover common use cases.
 /// All formats use the POSIX locale and UTC timezone for consistency across platforms.
 public enum DateFormat {
-    /// ISO8601 format (e.g., "2025-01-16T15:30:00Z")
+    /// ISO8601 format (e.g., "2024-01-16T00:10:00+0000")
     /// Commonly used for API communication and data interchange.
     public static let iso8601 = "yyyy-MM-dd'T'HH:mm:ssZ"
 
-    /// HTTP format (e.g., "Wed, 16 Jan 2025 15:30:00 GMT")
+    /// HTTP format (e.g., "Tue, 16 Jan 2024 00:10:00 GMT")
     /// Used in HTTP headers like "If-Modified-Since" and "Last-Modified".
-    public static let http = "EEE, dd MMM yyyy HH:mm:ss zzz"
+    public static let http = "EEE, dd MMM yyyy HH:mm:ss 'GMT'"
 
-    /// Short date (e.g., "01/16/2025")
+    /// Short date (e.g., "01/16/2024")
     /// Compact representation for display purposes.
     public static let shortDate = "MM/dd/yyyy"
 
-    /// Long date (e.g., "January 16, 2025")
+    /// Long date (e.g., "January 16, 2024")
     /// Human-readable format with full month name.
     public static let longDate = "MMMM dd, yyyy"
 
-    /// Time only (e.g., "15:30:00")
+    /// Time only (e.g., "00:10:00")
     /// For when only the time component is needed.
     public static let time = "HH:mm:ss"
 
-    /// Date and time (e.g., "01/16/2025 15:30:00")
+    /// Date and time (e.g., "01/16/2024 00:10:00")
     /// Combined date and time for complete timestamp display.
     public static let dateTime = "MM/dd/yyyy HH:mm:ss"
 
-    /// Year and month (e.g., "January 2025")
+    /// Year and month (e.g., "January 2024")
     /// For month-level granularity display.
     public static let yearMonth = "MMMM yyyy"
 
-    /// Compact numeric (e.g., "20250116")
+    /// Compact numeric (e.g., "20240116")
     /// For file names or when space is at a premium.
     public static let compact = "yyyyMMdd"
 }

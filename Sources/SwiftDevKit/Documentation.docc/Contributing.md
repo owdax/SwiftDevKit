@@ -93,4 +93,3 @@ brew install swiftlint swiftformat swiftgen
 
 - [Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
 - [DocC Documentation](https://developer.apple.com/documentation/docc)
-- [Swift Testing Documentation](https://github.com/apple/swift-testing) 
