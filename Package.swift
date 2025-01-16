@@ -28,7 +28,7 @@ let package = Package(
         .target(
             name: "SwiftDevKit",
             dependencies: [
-                .product(name: "DocC", package: "swift-docc-plugin", condition: .when(platforms: [.macOS]))
+                .product(name: "DocC", package: "swift-docc-plugin", condition: .when(platforms: [.macOS])),
             ],
             path: "Sources/SwiftDevKit",
             exclude: [
@@ -37,7 +37,7 @@ let package = Package(
                 "Documentation.docc/Contributing.md",
                 "Documentation.docc/Conversion.md",
                 "Documentation.docc/GettingStarted.md",
-                "Documentation.docc/SwiftDevKit.md"
+                "Documentation.docc/SwiftDevKit.md",
             ],
             resources: [
                 .process("Resources"),
