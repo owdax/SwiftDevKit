@@ -6,10 +6,10 @@ import PackageDescription
 let package = Package(
     name: "SwiftDevKit",
     platforms: [
-        .iOS(.v13),
-        .macOS("10.15.4"),
-        .tvOS(.v13),
-        .watchOS(.v6),
+        .macOS(.v13),
+        .iOS(.v16),
+        .tvOS(.v16),
+        .watchOS(.v9),
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -19,8 +19,8 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies will be added as needed
-        .package(url: "https://github.com/apple/swift-testing.git", from: "0.5.0"),
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
+        .package(url: "https://github.com/apple/swift-testing", from: "0.5.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -29,12 +29,11 @@ let package = Package(
             name: "SwiftDevKit",
             dependencies: [],
             resources: [
-                .process("Resources"),
+                .process("Resources")
             ],
             swiftSettings: [
-                .define("DEBUG", .when(configuration: .debug)),
                 .enableUpcomingFeature("BareSlashRegexLiterals"),
-                .enableExperimentalFeature("StrictConcurrency"),
+                .enableExperimentalFeature("StrictConcurrency")
             ]),
         .testTarget(
             name: "SwiftDevKitTests",

@@ -12,7 +12,7 @@ public extension StringConvertible where Self: Numeric & LosslessStringConvertib
     func toString() throws -> String {
         String(describing: self)
     }
-
+    
     static func fromString(_ string: String) throws -> Self {
         guard let value = Self(string) else {
             throw StringConversionError.invalidInput(string)
