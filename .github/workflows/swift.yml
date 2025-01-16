@@ -8,9 +8,6 @@ on:
     branches: [ "master" ]
   workflow_dispatch:
 
-env:
-  DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
-
 jobs:
   analyze:
     name: Analyze
@@ -23,13 +20,18 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    - name: Setup Swift
+      uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: "6.0"
+    
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
         languages: swift
     
     - name: Build
-      run: swift build -v
+      run: swift build -v -Xswiftc -swift-version -Xswiftc 6
       
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
@@ -44,11 +46,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    - name: Setup Swift
+      uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: "6.0"
+    
     - name: Build
-      run: swift build -v
+      run: swift build -v -Xswiftc -swift-version -Xswiftc 6
       
     - name: Run tests
-      run: swift test -v --enable-code-coverage
+      run: swift test -v -Xswiftc -swift-version -Xswiftc 6 --enable-code-coverage
       
     - name: Convert coverage report
       run: xcrun llvm-cov export -format="lcov" .build/debug/SwiftDevKitPackageTests.xctest/Contents/MacOS/SwiftDevKitPackageTests -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
@@ -80,9 +87,18 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    - name: Setup Swift
+      uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: "6.0"
+    
     - name: Generate Documentation
       run: |
-        swift package --allow-writing-to-directory docs generate-documentation --target SwiftDevKit --output-path docs
+        swift package --allow-writing-to-directory docs \
+          generate-documentation --target SwiftDevKit \
+          --output-path docs \
+          --transform-for-static-hosting \
+          --hosting-base-path SwiftDevKit
         
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
