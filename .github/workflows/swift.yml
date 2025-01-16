@@ -56,14 +56,14 @@ jobs:
       
     - name: Generate coverage report
       run: |
-        xcrun llvm-cov export -format="xml" \
+        xcrun llvm-cov export -format=lcov \
           .build/debug/SwiftDevKitPackageTests.xctest/Contents/MacOS/SwiftDevKitPackageTests \
-          -instr-profile .build/debug/codecov/default.profdata > coverage.xml
+          -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
       
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
       with:
-        file: coverage.xml
+        files: ./coverage.lcov
         token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: true
         verbose: true
