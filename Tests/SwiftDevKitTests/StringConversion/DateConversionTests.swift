@@ -12,7 +12,7 @@ import Testing
 struct DateConversionTests {
     @Test("Test date string conversion with various formats")
     func testDateStringConversion() async throws {
-        let date = Date(timeIntervalSince1970: 1705363800) // 2024-01-16 00:10:00 UTC
+        let date = Date(timeIntervalSince1970: 1_705_363_800) // 2024-01-16 00:10:00 UTC
 
         // Test ISO8601
         let iso8601 = try await date.toISO8601()

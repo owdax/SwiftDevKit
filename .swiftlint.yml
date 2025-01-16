@@ -7,6 +7,7 @@ excluded:
 disabled_rules:
   - trailing_comma
   - comment_spacing
+  - switch_case_alignment
 
 opt_in_rules:
   - array_init
@@ -46,6 +47,7 @@ opt_in_rules:
   - vertical_whitespace_closing_braces
   - vertical_whitespace_opening_braces
   - yoda_condition
+  - unused_import
 
 analyzer_rules:
   - explicit_self

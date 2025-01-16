@@ -40,7 +40,7 @@ let package = Package(
                 .process("Resources"),
             ],
             swiftSettings: [
-                .define("SWIFT_STRICT_CONCURRENCY", .when(configuration: .debug))
+                .define("SWIFT_STRICT_CONCURRENCY", .when(configuration: .debug)),
             ]),
         .testTarget(
             name: "SwiftDevKitTests",
@@ -48,6 +48,6 @@ let package = Package(
                 "SwiftDevKit",
             ],
             swiftSettings: [
-                .define("SWIFT_STRICT_CONCURRENCY", .when(configuration: .debug))
-            ])
+                .define("SWIFT_STRICT_CONCURRENCY", .when(configuration: .debug)),
+            ]),
     ])
