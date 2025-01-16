@@ -56,14 +56,14 @@ public enum DateConversionError: Error, LocalizedError, Equatable {
 
     public var errorDescription: String? {
         switch self {
-            case let .invalidFormat(value):
-                return "Date string doesn't match the expected format: \(value)"
-            case .invalidComponents:
-                return "Date contains invalid components"
-            case let .invalidFormatString(format):
-                return "Invalid date format string: \(format)"
-            case let .custom(message):
-                return message
+        case .invalidFormat(let value):
+            return "Date string doesn't match the expected format: \(value)"
+        case .invalidComponents:
+            return "Date contains invalid components"
+        case .invalidFormatString(let format):
+            return "Invalid date format string: \(format)"
+        case .custom(let message):
+            return message
         }
     }
 }
