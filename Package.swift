@@ -1,15 +1,16 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "SwiftDevKit",
+    defaultLocalization: nil,
     platforms: [
-        .iOS(.v13),
-        .macOS(.v10_15),
-        .tvOS(.v13),
-        .watchOS(.v6),
+        .macOS(.v13),
+        .iOS(.v16),
+        .tvOS(.v16),
+        .watchOS(.v9),
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -19,7 +20,6 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies will be added as needed
-        .package(url: "https://github.com/apple/swift-testing.git", from: "0.5.0"),
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     ],
     targets: [
@@ -27,19 +27,27 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "SwiftDevKit",
-            dependencies: [],
-            swiftSettings: [
-                .define("DEBUG", .when(configuration: .debug)),
-                .enableUpcomingFeature("BareSlashRegexLiterals"),
-                .enableExperimentalFeature("StrictConcurrency"),
+            path: "Sources/SwiftDevKit",
+            exclude: [
+                "Documentation.docc/Installation.md",
+                "Documentation.docc/Architecture.md",
+                "Documentation.docc/Contributing.md",
+                "Documentation.docc/Conversion.md",
+                "Documentation.docc/GettingStarted.md",
+                "Documentation.docc/SwiftDevKit.md",
             ],
-            plugins: [
-                .plugin(name: "Swift-DocC", package: "swift-docc-plugin"),
+            resources: [
+                .copy("Resources"),
+            ],
+            swiftSettings: [
+                .define("SWIFT_STRICT_CONCURRENCY", .when(configuration: .debug)),
             ]),
         .testTarget(
             name: "SwiftDevKitTests",
             dependencies: [
                 "SwiftDevKit",
-                .product(name: "Testing", package: "swift-testing"),
+            ],
+            swiftSettings: [
+                .define("SWIFT_STRICT_CONCURRENCY", .when(configuration: .debug)),
             ]),
     ])

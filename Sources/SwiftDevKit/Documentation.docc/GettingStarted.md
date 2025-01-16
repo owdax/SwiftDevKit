@@ -1,49 +1,122 @@
 # Getting Started with SwiftDevKit
 
-Learn how to integrate and start using SwiftDevKit in your projects.
+This guide helps you get started with string and date conversion features in SwiftDevKit.
 
 ## Overview
 
-SwiftDevKit is designed to be easy to integrate and use in your Swift projects. This guide will help you get started with the basic setup and show you how to use some of the core features.
+SwiftDevKit provides simple and type-safe ways to convert values to and from strings, including specialized support for date formatting with thread safety.
 
 ## Requirements
 
-- iOS 13.0+ / macOS 10.15+ / tvOS 13.0+ / watchOS 6.0+
-- Xcode 16.0+
+- iOS 16.0+ / macOS 13.0+ / tvOS 16.0+ / watchOS 9.0+
 - Swift 5.9+
 
 ## Basic Setup
 
-First, import SwiftDevKit in your source files:
+Add SwiftDevKit to your project using Swift Package Manager:
 
 ```swift
-import SwiftDevKit
+dependencies: [
+    .package(url: "https://github.com/yourusername/SwiftDevKit.git", from: "1.0.0")
+]
 ```
 
-### Version Check
+## Using String Conversion
 
-You can verify the version of SwiftDevKit you're using:
+### Built-in Types
+
+SwiftDevKit extends common numeric types with string conversion capabilities:
 
 ```swift
-let version = SwiftDevKit.version
-print("Using SwiftDevKit version: \(version)")
+let number = 42
+let string = try await number.toString() // "42"
+let backToNumber = try await Int.fromString("42") // 42
 ```
 
-### Platform Support
+### Custom Types
 
-SwiftDevKit automatically validates if your current environment meets the minimum requirements:
+Make your types string-convertible by conforming to `StringConvertible`:
 
 ```swift
-if SwiftDevKit.isEnvironmentValid {
-    // Safe to use SwiftDevKit features
-} else {
-    // Handle unsupported platform
+struct User: StringConvertible {
+    let id: Int
+    
+    func toString() async throws -> String {
+        return String(id)
+    }
+    
+    static func fromString(_ string: String) async throws -> Self {
+        guard let id = Int(string) else {
+            throw StringConversionError.invalidInput(string)
+        }
+        return User(id: id)
+    }
+}
+```
+
+## Date Conversion
+
+SwiftDevKit provides thread-safe date formatting with common predefined formats:
+
+```swift
+// Using ISO8601
+let date = Date()
+let iso8601 = try await date.toISO8601() // "2025-01-16T15:30:00Z"
+let parsedDate = try await Date.fromISO8601(iso8601)
+
+// Using custom formats
+let shortDate = try await date.toString(format: DateFormat.shortDate) // "01/16/2025"
+let httpDate = try await date.toHTTPDate() // "Wed, 16 Jan 2025 15:30:00 GMT"
+```
+
+### Predefined Date Formats
+
+SwiftDevKit includes commonly used date formats:
+- `DateFormat.iso8601` - Standard format for APIs
+- `DateFormat.http` - For HTTP headers
+- `DateFormat.shortDate` - Compact display format
+- `DateFormat.longDate` - Human-readable format
+- `DateFormat.dateTime` - Combined date and time
+- And more...
+
+### Thread Safety
+
+All date conversion operations are thread-safe and can be called concurrently from multiple tasks. The framework uses an actor-based formatter cache to ensure optimal performance while maintaining thread safety.
+
+## Error Handling
+
+Handle conversion errors appropriately:
+
+```swift
+do {
+    let value = try await Int.fromString("not a number")
+} catch let error as StringConversionError {
+    switch error {
+    case .invalidInput(let value):
+        print("Invalid input: \(value)")
+    }
+}
+
+do {
+    let date = try await Date.fromString("invalid", format: DateFormat.iso8601)
+} catch let error as DateConversionError {
+    switch error {
+    case .invalidFormat(let value):
+        print("Invalid date format: \(value)")
+    case .invalidComponents:
+        print("Invalid date components")
+    case .invalidFormatString(let format):
+        print("Invalid format string: \(format)")
+    case .custom(let message):
+        print(message)
+    }
 }
 ```
 
 ## Next Steps
 
-- Check out the <doc:Installation> guide for detailed installation instructions
-- Explore the different categories of utilities available
-- Read through the API documentation for specific features
-- Visit our [GitHub repository](https://github.com/owdax/SwiftDevKit) for the latest updates 
+- Explore the API documentation for more details
+- Check out example projects in the repository
+- Join our community discussions
+
+For more information, visit the [SwiftDevKit Documentation](https://github.com/yourusername/SwiftDevKit). 
