@@ -37,7 +37,7 @@ let package = Package(
                 "Documentation.docc/SwiftDevKit.md",
             ],
             resources: [
-                .process("Resources"),
+                .copy("Resources")
             ],
             swiftSettings: [
                 .define("SWIFT_STRICT_CONCURRENCY", .when(configuration: .debug)),
