@@ -27,7 +27,18 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "SwiftDevKit",
-            dependencies: [],
+            dependencies: [
+                .product(name: "DocC", package: "swift-docc-plugin", condition: .when(platforms: [.macOS]))
+            ],
+            path: "Sources/SwiftDevKit",
+            exclude: [
+                "Documentation.docc/Installation.md",
+                "Documentation.docc/Architecture.md",
+                "Documentation.docc/Contributing.md",
+                "Documentation.docc/Conversion.md",
+                "Documentation.docc/GettingStarted.md",
+                "Documentation.docc/SwiftDevKit.md"
+            ],
             resources: [
                 .process("Resources"),
             ],
