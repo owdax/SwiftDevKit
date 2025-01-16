@@ -29,11 +29,11 @@ let package = Package(
             name: "SwiftDevKit",
             dependencies: [],
             resources: [
-                .process("Resources")
+                .process("Resources"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("BareSlashRegexLiterals"),
-                .enableExperimentalFeature("StrictConcurrency")
+                .enableExperimentalFeature("StrictConcurrency"),
             ]),
         .testTarget(
             name: "SwiftDevKitTests",

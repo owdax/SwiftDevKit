@@ -4,10 +4,10 @@
 // Copyright (c) 2025 owdax and The SwiftDevKit Contributors
 // MIT License - https://opensource.org/licenses/MIT
 
-import Foundation
-import Testing
 import _TestingInternals
+import Foundation
 import SwiftDevKit
+import Testing
 
 // MARK: - Core Tests
 
