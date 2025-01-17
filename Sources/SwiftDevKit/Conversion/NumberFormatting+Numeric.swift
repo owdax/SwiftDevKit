@@ -12,8 +12,8 @@ extension Int: NumberFormattable {
     public func formatted(
         decimals: Int? = nil,
         grouping: Bool? = nil,
-        roundingRule: NumberFormatter.RoundingMode? = nil) async throws -> String
-    {
+        roundingRule: NumberFormatter.RoundingMode? = nil
+    ) async throws -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.maximumFractionDigits = decimals ?? 0
@@ -31,8 +31,8 @@ extension Double: NumberFormattable {
     public func formatted(
         decimals: Int? = nil,
         grouping: Bool? = nil,
-        roundingRule: NumberFormatter.RoundingMode? = nil) async throws -> String
-    {
+        roundingRule: NumberFormatter.RoundingMode? = nil
+    ) async throws -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.maximumFractionDigits = decimals ?? 2
@@ -51,8 +51,8 @@ extension Float: NumberFormattable {
     public func formatted(
         decimals: Int? = nil,
         grouping: Bool? = nil,
-        roundingRule: NumberFormatter.RoundingMode? = nil) async throws -> String
-    {
+        roundingRule: NumberFormatter.RoundingMode? = nil
+    ) async throws -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.maximumFractionDigits = decimals ?? 2
