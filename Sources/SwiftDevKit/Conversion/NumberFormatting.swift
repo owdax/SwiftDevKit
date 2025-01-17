@@ -43,6 +43,17 @@ public protocol NumberFormattable {
     func asPercentage(
         decimals: Int?,
         locale: Locale?) throws -> String
+
+    /// Formats the number as currency.
+    ///
+    /// - Parameters:
+    ///   - code: The ISO 4217 currency code (e.g., "USD", "EUR")
+    ///   - locale: The locale to use for formatting (default: current)
+    /// - Returns: A formatted currency string (e.g., "$1,234.56")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asCurrency(
+        code: String,
+        locale: Locale?) throws -> String
 }
 
 /// Errors that can occur during number formatting operations.
@@ -84,8 +95,8 @@ public extension NumberFormattable {
 
     func asPercentage(
         decimals: Int? = 2,
-        locale: Locale? = .current
-    ) throws -> String {
+        locale: Locale? = .current) throws -> String
+    {
         guard let number = self as? NSNumber else {
             throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
         }
@@ -98,6 +109,25 @@ public extension NumberFormattable {
 
         guard let result = formatter.string(from: number) else {
             throw NumberFormattingError.invalidNumber("Could not format as percentage")
+        }
+        return result
+    }
+
+    func asCurrency(
+        code: String,
+        locale: Locale? = .current
+    ) throws -> String {
+        guard let number = self as? NSNumber else {
+            throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
+        }
+
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = locale ?? .current
+        formatter.currencyCode = code
+
+        guard let result = formatter.string(from: number) else {
+            throw NumberFormattingError.invalidNumber("Could not format as currency")
         }
         return result
     }
