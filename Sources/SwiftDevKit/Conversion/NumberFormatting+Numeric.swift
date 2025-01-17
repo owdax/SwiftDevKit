@@ -9,8 +9,7 @@ import Foundation
 // MARK: - Numeric Types Conformance
 
 extension Int: NumberFormattable {
-    public func formatted
-    (
+    public func formatted(
         decimals: Int? = nil,
         grouping: Bool? = nil,
         roundingRule: NumberFormatter.RoundingMode? = nil
@@ -29,8 +28,7 @@ extension Int: NumberFormattable {
 }
 
 extension Double: NumberFormattable {
-    public func formatted
-    (
+    public func formatted(
         decimals: Int? = nil,
         grouping: Bool? = nil,
         roundingRule: NumberFormatter.RoundingMode? = nil
@@ -50,8 +48,7 @@ extension Double: NumberFormattable {
 }
 
 extension Float: NumberFormattable {
-    public func formatted
-    (
+    public func formatted(
         decimals: Int? = nil,
         grouping: Bool? = nil,
         roundingRule: NumberFormatter.RoundingMode? = nil

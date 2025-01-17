@@ -28,8 +28,7 @@ public protocol NumberFormattable {
     ///   - roundingRule: The rounding rule to apply (default: .toNearestOrEven)
     /// - Returns: A formatted string representation
     /// - Throws: `NumberFormattingError` if formatting fails
-    func formatted
-    (
+    func formatted(
         decimals: Int?,
         grouping: Bool?,
         roundingRule: NumberFormatter.RoundingMode?
