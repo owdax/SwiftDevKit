@@ -117,6 +117,14 @@ public protocol NumberFormattable {
     /// - Throws: `NumberFormattingError` if formatting fails
     func asHex(
         prefix: Bool?,
+        uppercase: Bool?) throws -> String
+
+    /// Formats the number as Roman numerals.
+    ///
+    /// - Parameter uppercase: Whether to use uppercase letters (default: true)
+    /// - Returns: A Roman numeral string (e.g., "MCMLIV" or "mcmliv")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asRoman(
         uppercase: Bool?
     ) throws -> String
 }
@@ -312,17 +320,45 @@ public extension NumberFormattable {
 
     func asHex(
         prefix: Bool? = false,
-        uppercase: Bool? = false
-    ) throws -> String {
+        uppercase: Bool? = false) throws -> String
+    {
         guard let number = self as? NSNumber else {
             throw NumberFormattingError.invalidNumber("Value cannot be converted to hexadecimal")
         }
-        
+
         var hex = String(Int(truncating: number), radix: 16)
         if uppercase ?? false {
             hex = hex.uppercased()
         }
-        
+
         return (prefix ?? false ? "0x" : "") + hex
+    }
+
+    func asRoman(
+        uppercase: Bool? = true
+    ) throws -> String {
+        guard let number = self as? NSNumber,
+              let intValue = Int(exactly: number),
+              intValue > 0 && intValue < 4000 else {
+            throw NumberFormattingError.invalidNumber("Value must be between 1 and 3999 for Roman numerals")
+        }
+
+        let romanValues: [(Int, String)] = [
+            (1000, "M"), (900, "CM"), (500, "D"), (400, "CD"),
+            (100, "C"), (90, "XC"), (50, "L"), (40, "XL"),
+            (10, "X"), (9, "IX"), (5, "V"), (4, "IV"), (1, "I")
+        ]
+        
+        var result = ""
+        var remaining = intValue
+        
+        for (value, symbol) in romanValues {
+            while remaining >= value {
+                result += symbol
+                remaining -= value
+            }
+        }
+        
+        return (uppercase ?? true) ? result : result.lowercased()
     }
 }
