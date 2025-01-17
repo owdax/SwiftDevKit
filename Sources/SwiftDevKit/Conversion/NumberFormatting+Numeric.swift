@@ -9,7 +9,8 @@ import Foundation
 // MARK: - Numeric Types Conformance
 
 extension Int: NumberFormattable {
-    public func formatted(
+    public func formatted
+    (
         decimals: Int? = nil,
         grouping: Bool? = nil,
         roundingRule: NumberFormatter.RoundingMode? = nil
@@ -19,7 +20,7 @@ extension Int: NumberFormattable {
         formatter.maximumFractionDigits = decimals ?? 0
         formatter.usesGroupingSeparator = grouping ?? true
         formatter.roundingMode = roundingRule ?? .down
-        
+
         guard let result = formatter.string(from: NSNumber(value: self)) else {
             throw NumberFormattingError.invalidNumber(String(self))
         }
@@ -28,7 +29,8 @@ extension Int: NumberFormattable {
 }
 
 extension Double: NumberFormattable {
-    public func formatted(
+    public func formatted
+    (
         decimals: Int? = nil,
         grouping: Bool? = nil,
         roundingRule: NumberFormatter.RoundingMode? = nil
@@ -39,7 +41,7 @@ extension Double: NumberFormattable {
         formatter.minimumFractionDigits = decimals ?? 2
         formatter.usesGroupingSeparator = grouping ?? true
         formatter.roundingMode = roundingRule ?? .down
-        
+
         guard let result = formatter.string(from: NSNumber(value: self)) else {
             throw NumberFormattingError.invalidNumber(String(self))
         }
@@ -48,7 +50,8 @@ extension Double: NumberFormattable {
 }
 
 extension Float: NumberFormattable {
-    public func formatted(
+    public func formatted
+    (
         decimals: Int? = nil,
         grouping: Bool? = nil,
         roundingRule: NumberFormatter.RoundingMode? = nil
@@ -59,7 +62,7 @@ extension Float: NumberFormattable {
         formatter.minimumFractionDigits = decimals ?? 2
         formatter.usesGroupingSeparator = grouping ?? true
         formatter.roundingMode = roundingRule ?? .down
-        
+
         guard let result = formatter.string(from: NSNumber(value: self)) else {
             throw NumberFormattingError.invalidNumber(String(self))
         }
