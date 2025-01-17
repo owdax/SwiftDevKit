@@ -65,6 +65,15 @@ public protocol NumberFormattable {
     func asScientific(
         decimals: Int?,
         locale: Locale?) throws -> String
+
+    /// Formats the number as an ordinal.
+    ///
+    /// - Parameters:
+    ///   - locale: The locale to use for formatting (default: current)
+    /// - Returns: An ordinal string (e.g., "1st", "2nd", "3rd", "4th")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asOrdinal(
+        locale: Locale?) throws -> String
 }
 
 /// Errors that can occur during number formatting operations.
@@ -145,8 +154,8 @@ public extension NumberFormattable {
 
     func asScientific(
         decimals: Int? = 2,
-        locale: Locale? = .current
-    ) throws -> String {
+        locale: Locale? = .current) throws -> String
+    {
         guard let number = self as? NSNumber else {
             throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
         }
@@ -159,6 +168,23 @@ public extension NumberFormattable {
 
         guard let result = formatter.string(from: number) else {
             throw NumberFormattingError.invalidNumber("Could not format as scientific notation")
+        }
+        return result
+    }
+
+    func asOrdinal(
+        locale: Locale? = .current
+    ) throws -> String {
+        guard let number = self as? NSNumber else {
+            throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
+        }
+
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .ordinal
+        formatter.locale = locale ?? .current
+
+        guard let result = formatter.string(from: number) else {
+            throw NumberFormattingError.invalidNumber("Could not format as ordinal")
         }
         return result
     }
