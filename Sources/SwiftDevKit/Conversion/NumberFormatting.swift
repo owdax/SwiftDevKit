@@ -136,7 +136,18 @@ public protocol NumberFormattable {
     /// - Throws: `NumberFormattingError` if formatting fails
     func asOctal(
         prefix: Bool?,
-        grouping: Bool?
+        grouping: Bool?) throws -> String
+
+    /// Formats the number in a custom base (radix).
+    ///
+    /// - Parameters:
+    ///   - radix: The base to use (2-36)
+    ///   - uppercase: Whether to use uppercase letters (default: false)
+    /// - Returns: A string in the specified base
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asBase(
+        _ radix: Int,
+        uppercase: Bool?
     ) throws -> String
 }
 
@@ -376,23 +387,23 @@ public extension NumberFormattable {
 
     func asOctal(
         prefix: Bool? = false,
-        grouping: Bool? = false
-    ) throws -> String {
+        grouping: Bool? = false) throws -> String
+    {
         guard let number = self as? NSNumber else {
             throw NumberFormattingError.invalidNumber("Value cannot be converted to octal")
         }
-        
+
         var octal = String(Int(truncating: number), radix: 8)
-        
+
         if grouping ?? false {
             // Group digits by 3 from the right
             let padding = (3 - (octal.count % 3)) % 3
             octal = String(repeating: "0", count: padding) + octal
-            
+
             var result = ""
             var index = 0
             for char in octal {
-                if index > 0 && index % 3 == 0 {
+                if index > 0, index % 3 == 0 {
                     result += "_"
                 }
                 result += String(char)
@@ -400,7 +411,27 @@ public extension NumberFormattable {
             }
             octal = result.trimmingCharacters(in: CharacterSet(charactersIn: "_"))
         }
-        
+
         return (prefix ?? false ? "0o" : "") + octal
+    }
+
+    func asBase(
+        _ radix: Int,
+        uppercase: Bool? = false
+    ) throws -> String {
+        guard let number = self as? NSNumber else {
+            throw NumberFormattingError.invalidNumber("Value cannot be converted to base \(radix)")
+        }
+        
+        guard radix >= 2 && radix <= 36 else {
+            throw NumberFormattingError.invalidOptions("Base must be between 2 and 36")
+        }
+        
+        var result = String(Int(truncating: number), radix: radix)
+        if uppercase ?? false {
+            result = result.uppercased()
+        }
+        
+        return result
     }
 }
