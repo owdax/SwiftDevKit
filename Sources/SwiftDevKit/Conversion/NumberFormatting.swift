@@ -31,8 +31,18 @@ public protocol NumberFormattable {
     func formatted(
         decimals: Int?,
         grouping: Bool?,
-        roundingRule: NumberFormatter.RoundingMode?
-    ) throws -> String
+        roundingRule: NumberFormatter.RoundingMode?) throws -> String
+
+    /// Formats the number as a percentage.
+    ///
+    /// - Parameters:
+    ///   - decimals: Number of decimal places (default: 2)
+    ///   - locale: The locale to use for formatting (default: current)
+    /// - Returns: A formatted percentage string (e.g., "42.5%")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asPercentage(
+        decimals: Int?,
+        locale: Locale?) throws -> String
 }
 
 /// Errors that can occur during number formatting operations.
@@ -70,5 +80,25 @@ public extension NumberFormattable {
     /// - Throws: `NumberFormattingError` if formatting fails
     func formatted() throws -> String {
         try formatted(decimals: 2, grouping: true, roundingRule: .halfUp)
+    }
+
+    func asPercentage(
+        decimals: Int? = 2,
+        locale: Locale? = .current
+    ) throws -> String {
+        guard let number = self as? NSNumber else {
+            throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
+        }
+
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .percent
+        formatter.locale = locale ?? .current
+        formatter.maximumFractionDigits = decimals ?? 2
+        formatter.minimumFractionDigits = decimals ?? 2
+
+        guard let result = formatter.string(from: number) else {
+            throw NumberFormattingError.invalidNumber("Could not format as percentage")
+        }
+        return result
     }
 }
