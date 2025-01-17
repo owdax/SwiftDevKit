@@ -31,8 +31,7 @@ public protocol NumberFormattable {
     func formatted(
         decimals: Int?,
         grouping: Bool?,
-        roundingRule: NumberFormatter.RoundingMode?
-    ) async throws -> String
+        roundingRule: NumberFormatter.RoundingMode?) async throws -> String
 }
 
 /// Errors that can occur during number formatting operations.
