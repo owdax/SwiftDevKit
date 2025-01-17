@@ -125,7 +125,18 @@ public protocol NumberFormattable {
     /// - Returns: A Roman numeral string (e.g., "MCMLIV" or "mcmliv")
     /// - Throws: `NumberFormattingError` if formatting fails
     func asRoman(
-        uppercase: Bool?
+        uppercase: Bool?) throws -> String
+
+    /// Formats the number as an octal string.
+    ///
+    /// - Parameters:
+    ///   - prefix: Whether to include "0o" prefix (default: false)
+    ///   - grouping: Whether to group digits by 3 (default: false)
+    /// - Returns: An octal string (e.g., "52" or "0o52" or "0o377")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asOctal(
+        prefix: Bool?,
+        grouping: Bool?
     ) throws -> String
 }
 
@@ -335,30 +346,61 @@ public extension NumberFormattable {
     }
 
     func asRoman(
-        uppercase: Bool? = true
-    ) throws -> String {
+        uppercase: Bool? = true) throws -> String
+    {
         guard let number = self as? NSNumber,
               let intValue = Int(exactly: number),
-              intValue > 0 && intValue < 4000 else {
+              intValue > 0, intValue < 4000
+        else {
             throw NumberFormattingError.invalidNumber("Value must be between 1 and 3999 for Roman numerals")
         }
 
         let romanValues: [(Int, String)] = [
             (1000, "M"), (900, "CM"), (500, "D"), (400, "CD"),
             (100, "C"), (90, "XC"), (50, "L"), (40, "XL"),
-            (10, "X"), (9, "IX"), (5, "V"), (4, "IV"), (1, "I")
+            (10, "X"), (9, "IX"), (5, "V"), (4, "IV"), (1, "I"),
         ]
-        
+
         var result = ""
         var remaining = intValue
-        
+
         for (value, symbol) in romanValues {
             while remaining >= value {
                 result += symbol
                 remaining -= value
             }
         }
-        
+
         return (uppercase ?? true) ? result : result.lowercased()
+    }
+
+    func asOctal(
+        prefix: Bool? = false,
+        grouping: Bool? = false
+    ) throws -> String {
+        guard let number = self as? NSNumber else {
+            throw NumberFormattingError.invalidNumber("Value cannot be converted to octal")
+        }
+        
+        var octal = String(Int(truncating: number), radix: 8)
+        
+        if grouping ?? false {
+            // Group digits by 3 from the right
+            let padding = (3 - (octal.count % 3)) % 3
+            octal = String(repeating: "0", count: padding) + octal
+            
+            var result = ""
+            var index = 0
+            for char in octal {
+                if index > 0 && index % 3 == 0 {
+                    result += "_"
+                }
+                result += String(char)
+                index += 1
+            }
+            octal = result.trimmingCharacters(in: CharacterSet(charactersIn: "_"))
+        }
+        
+        return (prefix ?? false ? "0o" : "") + octal
     }
 }
