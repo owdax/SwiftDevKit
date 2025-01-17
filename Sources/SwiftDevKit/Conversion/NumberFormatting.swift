@@ -43,7 +43,7 @@ public enum NumberFormattingError: Error, LocalizedError, Equatable {
     case invalidOptions(String)
     /// A custom error with a specific message.
     case custom(String)
-    
+
     public var errorDescription: String? {
         switch self {
             case let .invalidNumber(value):
@@ -58,7 +58,7 @@ public enum NumberFormattingError: Error, LocalizedError, Equatable {
 
 // MARK: - Default Implementation
 
-extension NumberFormattable {
+public extension NumberFormattable {
     /// Formats the number using default options.
     ///
     /// Default formatting uses:
@@ -68,7 +68,7 @@ extension NumberFormattable {
     ///
     /// - Returns: A formatted string representation
     /// - Throws: `NumberFormattingError` if formatting fails
-    public func formatted() async throws -> String {
-        try await formatted(decimals: 2, grouping: true, roundingRule: .toNearestOrEven)
+    func formatted() async throws -> String {
+        try await formatted(decimals: 2, grouping: true, roundingRule: .halfUp)
     }
-} 
+}
