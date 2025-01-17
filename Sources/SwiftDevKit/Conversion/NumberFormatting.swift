@@ -54,6 +54,17 @@ public protocol NumberFormattable {
     func asCurrency(
         code: String,
         locale: Locale?) throws -> String
+
+    /// Formats the number in scientific notation.
+    ///
+    /// - Parameters:
+    ///   - decimals: Number of decimal places (default: 2)
+    ///   - locale: The locale to use for formatting (default: current)
+    /// - Returns: A scientific notation string (e.g., "1.23E4")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asScientific(
+        decimals: Int?,
+        locale: Locale?) throws -> String
 }
 
 /// Errors that can occur during number formatting operations.
@@ -115,8 +126,8 @@ public extension NumberFormattable {
 
     func asCurrency(
         code: String,
-        locale: Locale? = .current
-    ) throws -> String {
+        locale: Locale? = .current) throws -> String
+    {
         guard let number = self as? NSNumber else {
             throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
         }
@@ -128,6 +139,26 @@ public extension NumberFormattable {
 
         guard let result = formatter.string(from: number) else {
             throw NumberFormattingError.invalidNumber("Could not format as currency")
+        }
+        return result
+    }
+
+    func asScientific(
+        decimals: Int? = 2,
+        locale: Locale? = .current
+    ) throws -> String {
+        guard let number = self as? NSNumber else {
+            throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
+        }
+
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .scientific
+        formatter.locale = locale ?? .current
+        formatter.maximumFractionDigits = decimals ?? 2
+        formatter.minimumFractionDigits = decimals ?? 2
+
+        guard let result = formatter.string(from: number) else {
+            throw NumberFormattingError.invalidNumber("Could not format as scientific notation")
         }
         return result
     }
