@@ -74,6 +74,18 @@ public protocol NumberFormattable {
     /// - Throws: `NumberFormattingError` if formatting fails
     func asOrdinal(
         locale: Locale?) throws -> String
+
+    /// Spells out the number in words.
+    ///
+    /// - Parameters:
+    ///   - locale: The locale to use for formatting (default: current)
+    ///   - capitalized: Whether to capitalize the first word (default: false)
+    /// - Returns: The number spelled out in words (e.g., "one thousand two hundred thirty-four")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asWords(
+        locale: Locale?,
+        capitalized: Bool?
+    ) throws -> String
 }
 
 /// Errors that can occur during number formatting operations.
@@ -173,8 +185,8 @@ public extension NumberFormattable {
     }
 
     func asOrdinal(
-        locale: Locale? = .current
-    ) throws -> String {
+        locale: Locale? = .current) throws -> String
+    {
         guard let number = self as? NSNumber else {
             throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
         }
@@ -185,6 +197,28 @@ public extension NumberFormattable {
 
         guard let result = formatter.string(from: number) else {
             throw NumberFormattingError.invalidNumber("Could not format as ordinal")
+        }
+        return result
+    }
+
+    func asWords(
+        locale: Locale? = .current,
+        capitalized: Bool? = false
+    ) throws -> String {
+        guard let number = self as? NSNumber else {
+            throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
+        }
+
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .spellOut
+        formatter.locale = locale ?? .current
+
+        guard var result = formatter.string(from: number) else {
+            throw NumberFormattingError.invalidNumber("Could not spell out number")
+        }
+
+        if capitalized ?? false {
+            result = result.prefix(1).uppercased() + result.dropFirst()
         }
         return result
     }
