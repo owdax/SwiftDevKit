@@ -84,7 +84,18 @@ public protocol NumberFormattable {
     /// - Throws: `NumberFormattingError` if formatting fails
     func asWords(
         locale: Locale?,
-        capitalized: Bool?
+        capitalized: Bool?) throws -> String
+
+    /// Formats the number in compact style.
+    ///
+    /// - Parameters:
+    ///   - style: The compact notation style (.short or .long) (default: .short)
+    ///   - locale: The locale to use for formatting (default: current)
+    /// - Returns: A compact string (e.g., "1.2K" or "1.2 thousand")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asCompact(
+        style: NumberFormatter.Style?,
+        locale: Locale?
     ) throws -> String
 }
 
@@ -203,8 +214,8 @@ public extension NumberFormattable {
 
     func asWords(
         locale: Locale? = .current,
-        capitalized: Bool? = false
-    ) throws -> String {
+        capitalized: Bool? = false) throws -> String
+    {
         guard let number = self as? NSNumber else {
             throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
         }
@@ -221,5 +232,29 @@ public extension NumberFormattable {
             result = result.prefix(1).uppercased() + result.dropFirst()
         }
         return result
+    }
+
+    func asCompact(
+        style: NumberFormatter.Style? = .decimal,
+        locale: Locale? = .current
+    ) throws -> String {
+        if #available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *) {
+            guard let number = self as? NSNumber else {
+                throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
+            }
+
+            let formatter = NumberFormatter()
+            formatter.numberStyle = style ?? .decimal
+            formatter.locale = locale ?? .current
+            formatter.usesGroupingSeparator = true
+            formatter.formattingContext = .standalone
+
+            guard let result = formatter.string(from: number) else {
+                throw NumberFormattingError.invalidNumber("Could not format in compact notation")
+            }
+            return result
+        } else {
+            throw NumberFormattingError.invalidOptions("Compact notation is only available on macOS 11.0+, iOS 14.0+")
+        }
     }
 }
