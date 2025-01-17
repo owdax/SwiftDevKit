@@ -106,7 +106,18 @@ public protocol NumberFormattable {
     /// - Throws: `NumberFormattingError` if formatting fails
     func asBinary(
         prefix: Bool?,
-        grouping: Bool?
+        grouping: Bool?) throws -> String
+
+    /// Formats the number as a hexadecimal string.
+    ///
+    /// - Parameters:
+    ///   - prefix: Whether to include "0x" prefix (default: false)
+    ///   - uppercase: Whether to use uppercase letters (default: false)
+    /// - Returns: A hexadecimal string (e.g., "ff" or "0xFF")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asHex(
+        prefix: Bool?,
+        uppercase: Bool?
     ) throws -> String
 }
 
@@ -271,23 +282,23 @@ public extension NumberFormattable {
 
     func asBinary(
         prefix: Bool? = false,
-        grouping: Bool? = false
-    ) throws -> String {
+        grouping: Bool? = false) throws -> String
+    {
         guard let number = self as? NSNumber else {
             throw NumberFormattingError.invalidNumber("Value cannot be converted to binary")
         }
-        
+
         var binary = String(Int(truncating: number), radix: 2)
-        
+
         if grouping ?? false {
             // Group digits by 4 from the right
             let padding = (4 - (binary.count % 4)) % 4
             binary = String(repeating: "0", count: padding) + binary
-            
+
             var result = ""
             var index = 0
             for char in binary {
-                if index > 0 && index % 4 == 0 {
+                if index > 0, index % 4 == 0 {
                     result += "_"
                 }
                 result += String(char)
@@ -295,7 +306,23 @@ public extension NumberFormattable {
             }
             binary = result.trimmingCharacters(in: CharacterSet(charactersIn: "_"))
         }
-        
+
         return (prefix ?? false ? "0b" : "") + binary
+    }
+
+    func asHex(
+        prefix: Bool? = false,
+        uppercase: Bool? = false
+    ) throws -> String {
+        guard let number = self as? NSNumber else {
+            throw NumberFormattingError.invalidNumber("Value cannot be converted to hexadecimal")
+        }
+        
+        var hex = String(Int(truncating: number), radix: 16)
+        if uppercase ?? false {
+            hex = hex.uppercased()
+        }
+        
+        return (prefix ?? false ? "0x" : "") + hex
     }
 }
