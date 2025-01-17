@@ -95,7 +95,18 @@ public protocol NumberFormattable {
     /// - Throws: `NumberFormattingError` if formatting fails
     func asCompact(
         style: NumberFormatter.Style?,
-        locale: Locale?
+        locale: Locale?) throws -> String
+
+    /// Formats the number as a binary string.
+    ///
+    /// - Parameters:
+    ///   - prefix: Whether to include "0b" prefix (default: false)
+    ///   - grouping: Whether to group digits by 4 (default: false)
+    /// - Returns: A binary string (e.g., "1010" or "0b1010" or "0b1010_1100")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asBinary(
+        prefix: Bool?,
+        grouping: Bool?
     ) throws -> String
 }
 
@@ -236,8 +247,8 @@ public extension NumberFormattable {
 
     func asCompact(
         style: NumberFormatter.Style? = .decimal,
-        locale: Locale? = .current
-    ) throws -> String {
+        locale: Locale? = .current) throws -> String
+    {
         if #available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *) {
             guard let number = self as? NSNumber else {
                 throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
@@ -256,5 +267,35 @@ public extension NumberFormattable {
         } else {
             throw NumberFormattingError.invalidOptions("Compact notation is only available on macOS 11.0+, iOS 14.0+")
         }
+    }
+
+    func asBinary(
+        prefix: Bool? = false,
+        grouping: Bool? = false
+    ) throws -> String {
+        guard let number = self as? NSNumber else {
+            throw NumberFormattingError.invalidNumber("Value cannot be converted to binary")
+        }
+        
+        var binary = String(Int(truncating: number), radix: 2)
+        
+        if grouping ?? false {
+            // Group digits by 4 from the right
+            let padding = (4 - (binary.count % 4)) % 4
+            binary = String(repeating: "0", count: padding) + binary
+            
+            var result = ""
+            var index = 0
+            for char in binary {
+                if index > 0 && index % 4 == 0 {
+                    result += "_"
+                }
+                result += String(char)
+                index += 1
+            }
+            binary = result.trimmingCharacters(in: CharacterSet(charactersIn: "_"))
+        }
+        
+        return (prefix ?? false ? "0b" : "") + binary
     }
 }
