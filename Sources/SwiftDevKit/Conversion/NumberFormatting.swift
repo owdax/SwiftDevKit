@@ -15,19 +15,19 @@ import Foundation
 /// Example usage:
 /// ```swift
 /// let number = 1234.5678
-/// 
+///
 /// // Basic formatting
 /// try number.formatted(decimals: 2)  // "1,234.57"
-/// 
+///
 /// // File size
 /// try (1_234_567_890).asFileSize()  // "1.23 GB"
-/// 
+///
 /// // Duration
 /// try 9045.asDuration()  // "2h 30m"
-/// 
+///
 /// // Fraction
 /// try 1.5.asFraction()  // "1 1/2"
-/// 
+///
 /// // Unit
 /// try 5.2.asUnit(.kilometers)  // "5.2 km"
 /// ```
@@ -558,6 +558,14 @@ public extension NumberFormattable {
         return result
     }
 
+    /// Formats the number in accounting style.
+    ///
+    /// - Parameters:
+    ///   - code: The ISO 4217 currency code (e.g., "USD", "EUR")
+    ///   - locale: The locale to use for formatting (default: current)
+    ///   - showPositiveSymbol: Whether to show + symbol for positive numbers (default: false)
+    /// - Returns: A formatted accounting string (e.g., "$1,234.56" or "($1,234.56)" for negative)
+    /// - Throws: `NumberFormattingError` if formatting fails
     func asAccounting(
         code: String,
         locale: Locale? = .current,
@@ -572,12 +580,32 @@ public extension NumberFormattable {
         formatter.locale = locale ?? .current
         formatter.currencyCode = code
         formatter.positivePrefix = (showPositiveSymbol ?? false) ? "+" : ""
-        formatter.negativeFormat = "($#)"
-
-        guard let result = formatter.string(from: number) else {
-            throw NumberFormattingError.invalidNumber("Could not format as accounting notation")
+        
+        // Handle specific locale formatting requirements
+        if locale?.identifier.starts(with: "de") == true {
+            formatter.negativeFormat = "(#)"
+            
+            guard let result = formatter.string(from: number) else {
+                throw NumberFormattingError.invalidNumber("Could not format as accounting notation")
+            }
+            
+            let symbol = formatter.currencySymbol.trimmingCharacters(in: .whitespaces)
+            let components = result.components(separatedBy: symbol)
+            if !components.isEmpty {
+                let numberPart = components[0].trimmingCharacters(in: .whitespaces)
+                if number.doubleValue < 0 {
+                    return "(\(numberPart.replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: ""))) \(symbol)"
+                }
+                return "\(numberPart) \(symbol)"
+            }
+            return result
+        } else {
+            formatter.negativeFormat = "($#)"
+            guard let result = formatter.string(from: number) else {
+                throw NumberFormattingError.invalidNumber("Could not format as accounting notation")
+            }
+            return result
         }
-        return result
     }
 
     /// Formats the number as a file size.
@@ -651,8 +679,8 @@ public extension NumberFormattable {
         }
 
         let maxDen = maxDenominator ?? 100
-        var num = Int(doubleValue)
-        var frac = doubleValue - Double(num)
+        let num = Int(doubleValue)
+        let frac = doubleValue - Double(num)
 
         if frac == 0 {
             return String(num)
@@ -662,27 +690,27 @@ public extension NumberFormattable {
         var bestDen = 1
         var bestError = frac
 
-        for den in 1...maxDen {
-            let n = Int(round(frac * Double(den)))
-            let error = abs(frac - Double(n) / Double(den))
+        for denominator in 1...maxDen {
+            let numerator = Int(round(frac * Double(denominator)))
+            let error = abs(frac - Double(numerator) / Double(denominator))
 
             if error < bestError {
-                bestNum = n
-                bestDen = den
+                bestNum = numerator
+                bestDen = denominator
                 bestError = error
             }
         }
 
         // Simplify the fraction
-        let gcd = { (a: Int, b: Int) -> Int in
-            var x = abs(a)
-            var y = abs(b)
-            while y != 0 {
-                let temp = y
-                y = x % y
-                x = temp
+        let gcd = { (first: Int, second: Int) -> Int in
+            var firstNum = abs(first)
+            var secondNum = abs(second)
+            while secondNum != 0 {
+                let temp = secondNum
+                secondNum = firstNum % secondNum
+                firstNum = temp
             }
-            return x
+            return firstNum
         }
 
         let divisor = gcd(bestNum, bestDen)
@@ -707,8 +735,8 @@ public extension NumberFormattable {
     @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
     func asUnit(
         _ unit: Dimension,
-        style: Formatter.UnitStyle? = .medium,
-        locale: Locale? = .current) throws -> String
+        style: Formatter.UnitStyle?,
+        locale: Locale?) throws -> String
     {
         guard let number = self as? NSNumber else {
             throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
@@ -718,6 +746,7 @@ public extension NumberFormattable {
         let formatter = MeasurementFormatter()
         formatter.unitStyle = style ?? .medium
         formatter.locale = locale ?? .current
+        formatter.unitOptions = .providedUnit // Prevent conversion to preferred units
 
         return formatter.string(from: measurement)
     }
