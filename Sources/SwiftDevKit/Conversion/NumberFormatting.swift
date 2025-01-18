@@ -147,7 +147,20 @@ public protocol NumberFormattable {
     /// - Throws: `NumberFormattingError` if formatting fails
     func asBase(
         _ radix: Int,
-        uppercase: Bool?
+        uppercase: Bool?) throws -> String
+
+    /// Formats the number in accounting style.
+    ///
+    /// - Parameters:
+    ///   - code: The ISO 4217 currency code (e.g., "USD", "EUR")
+    ///   - locale: The locale to use for formatting (default: current)
+    ///   - showPositiveSymbol: Whether to show + symbol for positive numbers (default: false)
+    /// - Returns: A formatted accounting string (e.g., "$1,234.56" or "($1,234.56)" for negative)
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asAccounting(
+        code: String,
+        locale: Locale?,
+        showPositiveSymbol: Bool?
     ) throws -> String
 }
 
@@ -417,21 +430,43 @@ public extension NumberFormattable {
 
     func asBase(
         _ radix: Int,
-        uppercase: Bool? = false
-    ) throws -> String {
+        uppercase: Bool? = false) throws -> String
+    {
         guard let number = self as? NSNumber else {
             throw NumberFormattingError.invalidNumber("Value cannot be converted to base \(radix)")
         }
-        
-        guard radix >= 2 && radix <= 36 else {
+
+        guard radix >= 2, radix <= 36 else {
             throw NumberFormattingError.invalidOptions("Base must be between 2 and 36")
         }
-        
+
         var result = String(Int(truncating: number), radix: radix)
         if uppercase ?? false {
             result = result.uppercased()
         }
-        
+
+        return result
+    }
+
+    func asAccounting(
+        code: String,
+        locale: Locale? = .current,
+        showPositiveSymbol: Bool? = false
+    ) throws -> String {
+        guard let number = self as? NSNumber else {
+            throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
+        }
+
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = locale ?? .current
+        formatter.currencyCode = code
+        formatter.positivePrefix = (showPositiveSymbol ?? false) ? "+" : ""
+        formatter.negativeFormat = "($#)"
+
+        guard let result = formatter.string(from: number) else {
+            throw NumberFormattingError.invalidNumber("Could not format as accounting notation")
+        }
         return result
     }
 }

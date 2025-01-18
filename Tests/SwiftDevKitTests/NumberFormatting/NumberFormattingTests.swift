@@ -247,3 +247,29 @@ func testBasicDecimalFormatting() throws {
     let rounded = try number.formatted(decimals: 2, roundingRule: .down)
     #expect(rounded == "1,234.56")
 }
+
+@Test("Test accounting format")
+func testAccountingFormat() throws {
+    // Positive number
+    let positive = 1234.56
+    let positiveFormat = try positive.asAccounting(code: "USD")
+    #expect(positiveFormat == "$1,234.56")
+
+    // Negative number
+    let negative = -1234.56
+    let negativeFormat = try negative.asAccounting(code: "USD")
+    #expect(negativeFormat == "($1,234.56)")
+
+    // With positive symbol
+    let withSymbol = try positive.asAccounting(code: "USD", showPositiveSymbol: true)
+    #expect(withSymbol == "+$1,234.56")
+
+    // Different locale and currency
+    let germanLocale = Locale(identifier: "de_DE")
+    let euro = try positive.asAccounting(code: "EUR", locale: germanLocale)
+    #expect(euro == "1.234,56 €")
+    
+    // Negative with different locale
+    let negativeEuro = try negative.asAccounting(code: "EUR", locale: germanLocale)
+    #expect(negativeEuro == "(1.234,56 €)")
+}
