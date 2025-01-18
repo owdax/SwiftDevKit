@@ -580,15 +580,15 @@ public extension NumberFormattable {
         formatter.locale = locale ?? .current
         formatter.currencyCode = code
         formatter.positivePrefix = (showPositiveSymbol ?? false) ? "+" : ""
-        
+
         // Handle specific locale formatting requirements
         if locale?.identifier.starts(with: "de") == true {
             formatter.negativeFormat = "(#)"
-            
+
             guard let result = formatter.string(from: number) else {
                 throw NumberFormattingError.invalidNumber("Could not format as accounting notation")
             }
-            
+
             let symbol = formatter.currencySymbol.trimmingCharacters(in: .whitespaces)
             let components = result.components(separatedBy: symbol)
             if !components.isEmpty {
