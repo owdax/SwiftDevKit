@@ -9,16 +9,31 @@ import Foundation
 /// A type that can be formatted as a number string with various options.
 ///
 /// This protocol provides a standardized way to format numbers with common options like
-/// decimal places, grouping separators, and rounding rules.
+/// decimal places, grouping separators, and rounding rules. It also includes specialized
+/// formatting options for file sizes, durations, fractions, and units.
 ///
 /// Example usage:
 /// ```swift
 /// let number = 1234.5678
+/// 
 /// // Basic formatting
-/// let formatted = try number.formatted(decimals: 2) // "1,234.57"
-/// // Without grouping
-/// let plain = try number.formatted(decimals: 2, grouping: false) // "1234.57"
+/// try number.formatted(decimals: 2)  // "1,234.57"
+/// 
+/// // File size
+/// try (1_234_567_890).asFileSize()  // "1.23 GB"
+/// 
+/// // Duration
+/// try 9045.asDuration()  // "2h 30m"
+/// 
+/// // Fraction
+/// try 1.5.asFraction()  // "1 1/2"
+/// 
+/// // Unit
+/// try 5.2.asUnit(.kilometers)  // "5.2 km"
 /// ```
+///
+/// All formatting methods support localization through the `locale` parameter and
+/// provide comprehensive error handling through `NumberFormattingError`.
 public protocol NumberFormattable {
     /// Formats the number with specified options.
     ///
@@ -164,6 +179,18 @@ public protocol NumberFormattable {
 
     /// Formats the number as a file size.
     ///
+    /// This method automatically selects appropriate units (bytes, KB, MB, GB, etc.)
+    /// based on the number's magnitude. It supports both decimal (file) and binary (memory)
+    /// styles of formatting.
+    ///
+    /// Example usage:
+    /// ```swift
+    /// let bytes = 1_234_567_890
+    /// try bytes.asFileSize()                    // "1.23 GB"
+    /// try bytes.asFileSize(style: .memory)      // "1.15 GiB"
+    /// try bytes.asFileSize(includeUnit: false)  // "1.23"
+    /// ```
+    ///
     /// - Parameters:
     ///   - style: The style to use (.file or .memory) (default: .file)
     ///   - includeUnit: Whether to include the unit (default: true)
@@ -177,6 +204,17 @@ public protocol NumberFormattable {
 
     /// Formats the number as a duration.
     ///
+    /// This method interprets the number as seconds and formats it into a human-readable
+    /// duration string. It automatically selects appropriate units (hours, minutes, seconds)
+    /// and supports various formatting styles.
+    ///
+    /// Example usage:
+    /// ```swift
+    /// let seconds = 9045  // 2h 30m 45s
+    /// try seconds.asDuration()                // "2h 30m"
+    /// try seconds.asDuration(style: .full)    // "2 hours, 30 minutes"
+    /// ```
+    ///
     /// - Parameters:
     ///   - style: The style to use (.abbreviated, .full, .short, .spellOut) (default: .abbreviated)
     ///   - locale: The locale to use for formatting (default: current)
@@ -188,6 +226,17 @@ public protocol NumberFormattable {
 
     /// Formats the number as a fraction.
     ///
+    /// This method converts decimal numbers into fractions, automatically finding the
+    /// best representation within the specified maximum denominator. It supports both
+    /// proper and improper fractions, and automatically simplifies the results.
+    ///
+    /// Example usage:
+    /// ```swift
+    /// try 1.5.asFraction()   // "1 1/2"
+    /// try 0.75.asFraction()  // "3/4"
+    /// try 2.75.asFraction()  // "2 3/4"
+    /// ```
+    ///
     /// - Parameters:
     ///   - maxDenominator: Maximum denominator to use (default: 100)
     ///   - locale: The locale to use for formatting (default: current)
@@ -198,6 +247,19 @@ public protocol NumberFormattable {
         locale: Locale?) throws -> String
 
     /// Formats the number with a unit.
+    ///
+    /// This method formats numbers with various measurement units, supporting all units
+    /// available in Foundation's Dimension types. It provides multiple formatting styles
+    /// and full localization support.
+    ///
+    /// Example usage:
+    /// ```swift
+    /// try 5.2.asUnit(.meters)                          // "5.2 m"
+    /// try 5.2.asUnit(.kilometers, style: .short)       // "5.2km"
+    /// try 5.2.asUnit(.kilometers, style: .long)        // "5.2 kilometers"
+    /// try 23.5.asUnit(.celsius)                        // "23.5°C"
+    /// try 75.5.asUnit(.kilograms)                      // "75.5 kg"
+    /// ```
     ///
     /// - Parameters:
     ///   - unit: The unit to use (e.g., .meters, .kilograms)
