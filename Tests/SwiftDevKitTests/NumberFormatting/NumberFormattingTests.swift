@@ -268,8 +268,89 @@ func testAccountingFormat() throws {
     let germanLocale = Locale(identifier: "de_DE")
     let euro = try positive.asAccounting(code: "EUR", locale: germanLocale)
     #expect(euro == "1.234,56 €")
-    
+
     // Negative with different locale
     let negativeEuro = try negative.asAccounting(code: "EUR", locale: germanLocale)
     #expect(negativeEuro == "(1.234,56 €)")
+}
+
+@Test("Test file size formatting")
+func testFileSizeFormatting() throws {
+    // Basic file size
+    let bytes = 1_234_567_890
+    let formatted = try bytes.asFileSize()
+    #expect(formatted == "1.23 GB")
+
+    // Memory style
+    let memory = try bytes.asFileSize(style: .memory)
+    #expect(memory == "1.15 GiB")
+
+    // Without unit
+    let noUnit = try bytes.asFileSize(includeUnit: false)
+    #expect(noUnit == "1.23")
+
+    // Different locale (German)
+    let germanLocale = Locale(identifier: "de_DE")
+    let germanFormat = try bytes.asFileSize(locale: germanLocale)
+    #expect(germanFormat == "1,23 GB")
+}
+
+@Test("Test duration formatting")
+func testDurationFormatting() throws {
+    let seconds = 9_045 // 2h 30m 45s
+
+    // Abbreviated style
+    let abbreviated = try seconds.asDuration()
+    #expect(abbreviated == "2h 30m")
+
+    // Full style
+    let full = try seconds.asDuration(style: .full)
+    #expect(full == "2 hours, 30 minutes")
+
+    // Different locale (German)
+    let germanLocale = Locale(identifier: "de_DE")
+    let germanFormat = try seconds.asDuration(style: .full, locale: germanLocale)
+    #expect(germanFormat == "2 Stunden, 30 Minuten")
+}
+
+@Test("Test fraction formatting")
+func testFractionFormatting() throws {
+    // Simple fractions
+    #expect(try 1.5.asFraction() == "1 1/2")
+    #expect(try 0.75.asFraction() == "3/4")
+    #expect(try 0.333.asFraction() == "1/3")
+    #expect(try 2.0.asFraction() == "2")
+
+    // Custom max denominator
+    #expect(try 0.333.asFraction(maxDenominator: 2) == "1/2")
+    #expect(try 0.333.asFraction(maxDenominator: 3) == "1/3")
+
+    // Mixed numbers
+    #expect(try 2.75.asFraction() == "2 3/4")
+}
+
+@Test("Test unit formatting")
+func testUnitFormatting() throws {
+    if #available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *) {
+        let distance = 5.2
+
+        // Length
+        let meters = try distance.asUnit(.meters)
+        #expect(meters == "5.2 m")
+
+        let kilometers = try distance.asUnit(.kilometers)
+        #expect(kilometers == "5.2 km")
+
+        // Different styles
+        let short = try distance.asUnit(.kilometers, style: .short)
+        #expect(short == "5.2km")
+
+        let long = try distance.asUnit(.kilometers, style: .long)
+        #expect(long == "5.2 kilometers")
+
+        // Different locale (German)
+        let germanLocale = Locale(identifier: "de_DE")
+        let germanFormat = try distance.asUnit(.kilometers, style: .long, locale: germanLocale)
+        #expect(germanFormat == "5,2 Kilometer")
+    }
 }

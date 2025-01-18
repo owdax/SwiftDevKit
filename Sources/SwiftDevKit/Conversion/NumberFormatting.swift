@@ -160,8 +160,56 @@ public protocol NumberFormattable {
     func asAccounting(
         code: String,
         locale: Locale?,
-        showPositiveSymbol: Bool?
-    ) throws -> String
+        showPositiveSymbol: Bool?) throws -> String
+
+    /// Formats the number as a file size.
+    ///
+    /// - Parameters:
+    ///   - style: The style to use (.file or .memory) (default: .file)
+    ///   - includeUnit: Whether to include the unit (default: true)
+    ///   - locale: The locale to use for formatting (default: current)
+    /// - Returns: A formatted file size string (e.g., "1.5 MB" or "1.5 MiB")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asFileSize(
+        style: ByteCountFormatter.CountStyle?,
+        includeUnit: Bool?,
+        locale: Locale?) throws -> String
+
+    /// Formats the number as a duration.
+    ///
+    /// - Parameters:
+    ///   - style: The style to use (.abbreviated, .full, .short, .spellOut) (default: .abbreviated)
+    ///   - locale: The locale to use for formatting (default: current)
+    /// - Returns: A formatted duration string (e.g., "2h 30m" or "2 hours 30 minutes")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asDuration(
+        style: DateComponentsFormatter.UnitsStyle?,
+        locale: Locale?) throws -> String
+
+    /// Formats the number as a fraction.
+    ///
+    /// - Parameters:
+    ///   - maxDenominator: Maximum denominator to use (default: 100)
+    ///   - locale: The locale to use for formatting (default: current)
+    /// - Returns: A formatted fraction string (e.g., "1 1/2" or "2/3")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asFraction(
+        maxDenominator: Int?,
+        locale: Locale?) throws -> String
+
+    /// Formats the number with a unit.
+    ///
+    /// - Parameters:
+    ///   - unit: The unit to use (e.g., .meters, .kilograms)
+    ///   - style: The formatting style (.short, .medium, .long) (default: .medium)
+    ///   - locale: The locale to use for formatting (default: current)
+    /// - Returns: A formatted unit string (e.g., "5.2 km" or "3.1 kg")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+    func asUnit(
+        _ unit: Dimension,
+        style: Formatter.UnitStyle?,
+        locale: Locale?) throws -> String
 }
 
 /// Errors that can occur during number formatting operations.
@@ -451,8 +499,8 @@ public extension NumberFormattable {
     func asAccounting(
         code: String,
         locale: Locale? = .current,
-        showPositiveSymbol: Bool? = false
-    ) throws -> String {
+        showPositiveSymbol: Bool? = false) throws -> String
+    {
         guard let number = self as? NSNumber else {
             throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
         }
@@ -468,5 +516,146 @@ public extension NumberFormattable {
             throw NumberFormattingError.invalidNumber("Could not format as accounting notation")
         }
         return result
+    }
+
+    /// Formats the number as a file size.
+    ///
+    /// - Parameters:
+    ///   - style: The style to use (.file or .memory) (default: .file)
+    ///   - includeUnit: Whether to include the unit (default: true)
+    ///   - locale: The locale to use for formatting (default: current)
+    /// - Returns: A formatted file size string (e.g., "1.5 MB" or "1.5 MiB")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asFileSize(
+        style: ByteCountFormatter.CountStyle? = .file,
+        includeUnit: Bool? = true,
+        locale: Locale? = .current) throws -> String
+    {
+        guard let number = self as? NSNumber else {
+            throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
+        }
+
+        let formatter = ByteCountFormatter()
+        formatter.countStyle = style ?? .file
+        formatter.includesUnit = includeUnit ?? true
+        formatter.allowedUnits = [.useAll]
+        formatter.isAdaptive = true
+
+        return formatter.string(fromByteCount: Int64(truncating: number))
+    }
+
+    /// Formats the number as a duration.
+    ///
+    /// - Parameters:
+    ///   - style: The style to use (.abbreviated, .full, .short, .spellOut) (default: .abbreviated)
+    ///   - locale: The locale to use for formatting (default: current)
+    /// - Returns: A formatted duration string (e.g., "2h 30m" or "2 hours 30 minutes")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asDuration(
+        style: DateComponentsFormatter.UnitsStyle? = .abbreviated,
+        locale: Locale? = .current) throws -> String
+    {
+        guard let number = self as? NSNumber else {
+            throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
+        }
+
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = style ?? .abbreviated
+        formatter.allowedUnits = [.hour, .minute, .second]
+        formatter.maximumUnitCount = 2
+        formatter.calendar?.locale = locale ?? .current
+
+        guard let result = formatter.string(from: TimeInterval(truncating: number)) else {
+            throw NumberFormattingError.invalidNumber("Could not format as duration")
+        }
+        return result
+    }
+
+    /// Formats the number as a fraction.
+    ///
+    /// - Parameters:
+    ///   - maxDenominator: Maximum denominator to use (default: 100)
+    ///   - locale: The locale to use for formatting (default: current)
+    /// - Returns: A formatted fraction string (e.g., "1 1/2" or "2/3")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asFraction(
+        maxDenominator: Int? = 100,
+        locale: Locale? = .current) throws -> String
+    {
+        guard let number = self as? NSNumber,
+              let doubleValue = Double(exactly: number) else {
+            throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
+        }
+
+        let maxDen = maxDenominator ?? 100
+        var num = Int(doubleValue)
+        var frac = doubleValue - Double(num)
+        
+        if frac == 0 {
+            return String(num)
+        }
+
+        var bestNum = 0
+        var bestDen = 1
+        var bestError = frac
+
+        for den in 1...maxDen {
+            let n = Int(round(frac * Double(den)))
+            let error = abs(frac - Double(n) / Double(den))
+            
+            if error < bestError {
+                bestNum = n
+                bestDen = den
+                bestError = error
+            }
+        }
+
+        // Simplify the fraction
+        let gcd = { (a: Int, b: Int) -> Int in
+            var x = abs(a)
+            var y = abs(b)
+            while y != 0 {
+                let temp = y
+                y = x % y
+                x = temp
+            }
+            return x
+        }
+
+        let divisor = gcd(bestNum, bestDen)
+        bestNum /= divisor
+        bestDen /= divisor
+
+        if num != 0 {
+            return "\(num) \(bestNum)/\(bestDen)"
+        } else {
+            return "\(bestNum)/\(bestDen)"
+        }
+    }
+
+    /// Formats the number with a unit.
+    ///
+    /// - Parameters:
+    ///   - unit: The unit to use (e.g., .meters, .kilograms)
+    ///   - style: The formatting style (.short, .medium, .long) (default: .medium)
+    ///   - locale: The locale to use for formatting (default: current)
+    /// - Returns: A formatted unit string (e.g., "5.2 km" or "3.1 kg")
+    /// - Throws: `NumberFormattingError` if formatting fails
+    @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+    func asUnit(
+        _ unit: Dimension,
+        style: Formatter.UnitStyle? = .medium,
+        locale: Locale? = .current) throws -> String
+    {
+        guard let number = self as? NSNumber else {
+            throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
+        }
+
+        let measurement = Measurement(value: Double(truncating: number), unit: unit)
+        let formatter = MeasurementFormatter()
+        formatter.unitStyle = style ?? .medium
+        formatter.locale = locale ?? .current
+
+        return formatter.string(from: measurement)
     }
 }
