@@ -8,6 +8,8 @@ disabled_rules:
   - trailing_comma
   - comment_spacing
   - switch_case_alignment
+  - multiline_parameters_brackets
+  - opening_brace
 
 opt_in_rules:
   - array_init
