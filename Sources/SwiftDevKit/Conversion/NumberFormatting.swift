@@ -583,14 +583,15 @@ public extension NumberFormattable {
         locale: Locale? = .current) throws -> String
     {
         guard let number = self as? NSNumber,
-              let doubleValue = Double(exactly: number) else {
+              let doubleValue = Double(exactly: number)
+        else {
             throw NumberFormattingError.invalidNumber("Value cannot be converted to a number")
         }
 
         let maxDen = maxDenominator ?? 100
         var num = Int(doubleValue)
         var frac = doubleValue - Double(num)
-        
+
         if frac == 0 {
             return String(num)
         }
@@ -602,7 +603,7 @@ public extension NumberFormattable {
         for den in 1...maxDen {
             let n = Int(round(frac * Double(den)))
             let error = abs(frac - Double(n) / Double(den))
-            
+
             if error < bestError {
                 bestNum = n
                 bestDen = den

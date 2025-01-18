@@ -297,7 +297,7 @@ func testFileSizeFormatting() throws {
 
 @Test("Test duration formatting")
 func testDurationFormatting() throws {
-    let seconds = 9_045 // 2h 30m 45s
+    let seconds = 9045 // 2h 30m 45s
 
     // Abbreviated style
     let abbreviated = try seconds.asDuration()
