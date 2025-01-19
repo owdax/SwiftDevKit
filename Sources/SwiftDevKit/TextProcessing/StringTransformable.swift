@@ -6,92 +6,78 @@
 
 import Foundation
 
-/// Errors that can occur during string transformations.
-public enum StringTransformError: LocalizedError, Equatable {
-    /// Thrown when a string transformation operation fails.
-    case transformationFailed(String)
-
-    /// Thrown when strings have unequal length for operations requiring equal lengths.
-    case unequalLength(String)
-
-    public var errorDescription: String? {
-        switch self {
-            case let .transformationFailed(message):
-                "String transformation failed: \(message)"
-            case let .unequalLength(message):
-                "String length mismatch: \(message)"
-        }
-    }
-}
-
-/// A protocol defining string transformation operations.
+/// A type that can perform various string transformations.
+///
+/// This protocol provides a standardized way to transform strings with common operations
+/// like case conversion, whitespace handling, and pattern-based transformations.
+///
+/// Example usage:
+/// ```swift
+/// let text = "hello world"
+/// try text.toTitleCase()      // "Hello World"
+/// try text.toCamelCase()      // "helloWorld"
+/// try text.toSnakeCase()      // "hello_world"
+/// try text.toKebabCase()      // "hello-world"
+/// ```
 public protocol StringTransformable {
     /// Converts the string to title case.
     ///
-    /// Example:
-    /// ```swift
-    /// "hello world".toTitleCase()  // Returns "Hello World"
-    /// ```
-    ///
-    /// - Returns: The string in title case
-    /// - Throws: `StringTransformError.transformationFailed` if the transformation fails
+    /// - Returns: A string with the first letter of each word capitalized.
+    /// - Throws: `StringTransformError` if the transformation fails.
     func toTitleCase() throws -> String
-
+    
     /// Converts the string to camel case.
     ///
-    /// Example:
-    /// ```swift
-    /// "hello world".toCamelCase()  // Returns "helloWorld"
-    /// ```
-    ///
-    /// - Returns: The string in camel case
-    /// - Throws: `StringTransformError.transformationFailed` if the transformation fails
+    /// - Returns: A string in camelCase format.
+    /// - Throws: `StringTransformError` if the transformation fails.
     func toCamelCase() throws -> String
-
+    
     /// Converts the string to snake case.
     ///
-    /// Example:
-    /// ```swift
-    /// "hello world".toSnakeCase()  // Returns "hello_world"
-    /// ```
-    ///
-    /// - Returns: The string in snake case
-    /// - Throws: `StringTransformError.transformationFailed` if the transformation fails
+    /// - Returns: A string in snake_case format.
+    /// - Throws: `StringTransformError` if the transformation fails.
     func toSnakeCase() throws -> String
-
+    
     /// Converts the string to kebab case.
     ///
-    /// Example:
-    /// ```swift
-    /// "hello world".toKebabCase()  // Returns "hello-world"
-    /// ```
-    ///
-    /// - Returns: The string in kebab case
-    /// - Throws: `StringTransformError.transformationFailed` if the transformation fails
+    /// - Returns: A string in kebab-case format.
+    /// - Throws: `StringTransformError` if the transformation fails.
     func toKebabCase() throws -> String
-
+    
     /// Removes excess whitespace from the string.
     ///
-    /// Example:
-    /// ```swift
-    /// "  hello   world  ".removeExcessWhitespace()  // Returns "hello world"
-    /// ```
-    ///
-    /// - Returns: The string with excess whitespace removed
-    /// - Throws: `StringTransformError.transformationFailed` if the transformation fails
+    /// - Returns: A string with normalized whitespace.
+    /// - Throws: `StringTransformError` if the transformation fails.
     func removeExcessWhitespace() throws -> String
-
-    /// Truncates the string to a specified length.
-    ///
-    /// Example:
-    /// ```swift
-    /// "Hello, World!".truncate(length: 5, ellipsis: "...")  // Returns "Hello..."
-    /// ```
+    
+    /// Truncates the string to the specified length.
     ///
     /// - Parameters:
-    ///   - length: The maximum length of the truncated string (including ellipsis)
-    ///   - ellipsis: The string to append to truncated text
-    /// - Returns: The truncated string
-    /// - Throws: `StringTransformError.transformationFailed` if the transformation fails
-    func truncate(length: Int, ellipsis: String) throws -> String
+    ///   - length: The maximum length of the resulting string.
+    ///   - smart: Whether to preserve word boundaries.
+    ///   - ellipsis: The string to append when truncating (default: "...").
+    /// - Returns: A truncated string.
+    /// - Throws: `StringTransformError` if the transformation fails.
+    func truncate(length: Int, smart: Bool?, ellipsis: String?) throws -> String
 }
+
+/// Errors that can occur during string transformations.
+public enum StringTransformError: Error, LocalizedError, Equatable {
+    /// The input string is invalid for the requested transformation.
+    case invalidInput(String)
+    /// The transformation operation failed.
+    case transformationFailed(String)
+    /// A custom error with a specific message.
+    case custom(String)
+    
+    public var errorDescription: String? {
+        switch self {
+        case let .invalidInput(value):
+            "Invalid input string: \(value)"
+        case let .transformationFailed(message):
+            "Transformation failed: \(message)"
+        case let .custom(message):
+            message
+        }
+    }
+} 
