@@ -25,31 +25,31 @@ public protocol StringTransformable {
     /// - Returns: A string with the first letter of each word capitalized.
     /// - Throws: `StringTransformError` if the transformation fails.
     func toTitleCase() throws -> String
-    
+
     /// Converts the string to camel case.
     ///
     /// - Returns: A string in camelCase format.
     /// - Throws: `StringTransformError` if the transformation fails.
     func toCamelCase() throws -> String
-    
+
     /// Converts the string to snake case.
     ///
     /// - Returns: A string in snake_case format.
     /// - Throws: `StringTransformError` if the transformation fails.
     func toSnakeCase() throws -> String
-    
+
     /// Converts the string to kebab case.
     ///
     /// - Returns: A string in kebab-case format.
     /// - Throws: `StringTransformError` if the transformation fails.
     func toKebabCase() throws -> String
-    
+
     /// Removes excess whitespace from the string.
     ///
     /// - Returns: A string with normalized whitespace.
     /// - Throws: `StringTransformError` if the transformation fails.
     func removeExcessWhitespace() throws -> String
-    
+
     /// Truncates the string to the specified length.
     ///
     /// - Parameters:
@@ -69,15 +69,15 @@ public enum StringTransformError: Error, LocalizedError, Equatable {
     case transformationFailed(String)
     /// A custom error with a specific message.
     case custom(String)
-    
+
     public var errorDescription: String? {
         switch self {
-        case let .invalidInput(value):
-            "Invalid input string: \(value)"
-        case let .transformationFailed(message):
-            "Transformation failed: \(message)"
-        case let .custom(message):
-            message
+            case let .invalidInput(value):
+                "Invalid input string: \(value)"
+            case let .transformationFailed(message):
+                "Transformation failed: \(message)"
+            case let .custom(message):
+                message
         }
     }
-} 
+}
