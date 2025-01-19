@@ -109,4 +109,3 @@ SwiftDevKit is available under the MIT license. See the [LICENSE](LICENSE) file 
 
 ## Acknowledgments
 
-This project is maintained by [@owdax](https://github.com/owdax) and the SwiftDevKit Contributors. We appreciate all contributions, big and small. 
