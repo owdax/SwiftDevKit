@@ -62,16 +62,16 @@ public extension Color {
         var green: CGFloat = 0
         var blue: CGFloat = 0
         var alpha: CGFloat = 0
-        
+
         #if canImport(AppKit)
-        guard let rgbColor = usingColorSpace(.sRGB) else {
-            return RGB(red: 0, green: 0, blue: 0, alpha: 1)
-        }
-        rgbColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+            guard let rgbColor = usingColorSpace(.sRGB) else {
+                return RGB(red: 0, green: 0, blue: 0, alpha: 1)
+            }
+            rgbColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
         #else
-        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+            getRed(&red, green: &green, blue: &blue, alpha: &alpha)
         #endif
-        
+
         return RGB(red: red, green: green, blue: blue, alpha: alpha)
     }
 
@@ -116,9 +116,8 @@ public extension Color {
             format: "%02X%02X%02X",
             Int(components.red * 255),
             Int(components.green * 255),
-            Int(components.blue * 255)
-        )
-        
+            Int(components.blue * 255))
+
         return includeHash ? "#\(hex)" : hex
     }
 
@@ -136,33 +135,33 @@ public extension Color {
         let red = components.red
         let green = components.green
         let blue = components.blue
-        
+
         let maximum = max(red, green, blue)
         let minimum = min(red, green, blue)
-        
+
         var hue: CGFloat = 0
         var saturation: CGFloat = 0
         let lightness = (maximum + minimum) / 2
-        
+
         let delta = maximum - minimum
-        
+
         if delta != 0 {
             saturation = lightness > 0.5 ?
                 delta / (2 - maximum - minimum) :
                 delta / (maximum + minimum)
-            
+
             switch maximum {
-            case red:
-                hue = (green - blue) / delta + (green < blue ? 6 : 0)
-            case green:
-                hue = (blue - red) / delta + 2
-            default:
-                hue = (red - green) / delta + 4
+                case red:
+                    hue = (green - blue) / delta + (green < blue ? 6 : 0)
+                case green:
+                    hue = (blue - red) / delta + 2
+                default:
+                    hue = (red - green) / delta + 4
             }
-            
+
             hue *= 60
         }
-        
+
         return HSL(hue: hue, saturation: saturation, lightness: lightness)
     }
 
@@ -175,25 +174,25 @@ public extension Color {
     ///
     /// - Parameter hsl: HSL color values
     convenience init(hsl: HSL) {
-        func hueToRGB(_ p: CGFloat, _ q: CGFloat, _ t: CGFloat) -> CGFloat {
-            var t = t
-            if t < 0 { t += 1 }
-            if t > 1 { t -= 1 }
-            if t < 1 / 6 { return p + (q - p) * 6 * t }
-            if t < 1 / 2 { return q }
-            if t < 2 / 3 { return p + (q - p) * (2 / 3 - t) * 6 }
-            return p
+        func hueToRGB(_ primary: CGFloat, _ secondary: CGFloat, _ third: CGFloat) -> CGFloat {
+            var hueComponent = third
+            if hueComponent < 0 { hueComponent += 1 }
+            if hueComponent > 1 { hueComponent -= 1 }
+            if hueComponent < 1/6 { return primary + (secondary - primary) * 6 * hueComponent }
+            if hueComponent < 1/2 { return secondary }
+            if hueComponent < 2/3 { return primary + (secondary - primary) * (2/3 - hueComponent) * 6 }
+            return primary
         }
 
-        let h = hsl.hue / 360
-        let q = hsl.lightness < 0.5 ?
+        let normalizedHue = hsl.hue / 360
+        let secondaryComponent = hsl.lightness < 0.5 ?
             hsl.lightness * (1 + hsl.saturation) :
             hsl.lightness + hsl.saturation - hsl.lightness * hsl.saturation
-        let p = 2 * hsl.lightness - q
+        let primaryComponent = 2 * hsl.lightness - secondaryComponent
 
-        let red = hueToRGB(p, q, h + 1 / 3)
-        let green = hueToRGB(p, q, h)
-        let blue = hueToRGB(p, q, h - 1 / 3)
+        let red = hueToRGB(primaryComponent, secondaryComponent, normalizedHue + 1/3)
+        let green = hueToRGB(primaryComponent, secondaryComponent, normalizedHue)
+        let blue = hueToRGB(primaryComponent, secondaryComponent, normalizedHue - 1/3)
 
         self.init(red: red, green: green, blue: blue, alpha: 1.0)
     }
@@ -212,14 +211,14 @@ public extension Color {
         let red = components.red
         let green = components.green
         let blue = components.blue
-        
+
         let key = 1 - max(red, green, blue)
         guard key != 1 else { return CMYK(cyan: 0, magenta: 0, yellow: 0, key: 1) }
-        
+
         let cyan = (1 - red - key) / (1 - key)
         let magenta = (1 - green - key) / (1 - key)
         let yellow = (1 - blue - key) / (1 - key)
-        
+
         return CMYK(cyan: cyan, magenta: magenta, yellow: yellow, key: key)
     }
 
@@ -253,30 +252,30 @@ public extension Color {
         let red = components.red
         let green = components.green
         let blue = components.blue
-        
+
         let maximum = max(red, green, blue)
         let minimum = min(red, green, blue)
         let delta = maximum - minimum
-        
+
         var hue: CGFloat = 0
         var saturation: CGFloat = 0
         let value = maximum
-        
+
         if delta != 0 {
             saturation = delta / maximum
-            
+
             switch maximum {
-            case red:
-                hue = (green - blue) / delta + (green < blue ? 6 : 0)
-            case green:
-                hue = (blue - red) / delta + 2
-            default:
-                hue = (red - green) / delta + 4
+                case red:
+                    hue = (green - blue) / delta + (green < blue ? 6 : 0)
+                case green:
+                    hue = (blue - red) / delta + 2
+                default:
+                    hue = (red - green) / delta + 4
             }
-            
+
             hue *= 60
         }
-        
+
         return HSV(hue: hue, saturation: saturation, value: value)
     }
 
@@ -289,43 +288,43 @@ public extension Color {
     ///
     /// - Parameter hsv: HSV color values
     convenience init(hsv: HSV) {
-        let h = hsv.hue / 60
-        let i = floor(h)
-        let f = h - i
+        let normalizedHue = hsv.hue / 60
+        let integerPart = floor(normalizedHue)
+        let fractionalPart = normalizedHue - integerPart
 
-        let p = hsv.value * (1 - hsv.saturation)
-        let q = hsv.value * (1 - hsv.saturation * f)
-        let t = hsv.value * (1 - hsv.saturation * (1 - f))
+        let minValue = hsv.value * (1 - hsv.saturation)
+        let decreasing = hsv.value * (1 - hsv.saturation * fractionalPart)
+        let increasing = hsv.value * (1 - hsv.saturation * (1 - fractionalPart))
 
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0
 
-        switch Int(i) % 6 {
+        switch Int(integerPart) % 6 {
             case 0:
                 red = hsv.value
-                green = t
-                blue = p
+                green = increasing
+                blue = minValue
             case 1:
-                red = q
+                red = decreasing
                 green = hsv.value
-                blue = p
+                blue = minValue
             case 2:
-                red = p
+                red = minValue
                 green = hsv.value
-                blue = t
+                blue = increasing
             case 3:
-                red = p
-                green = q
+                red = minValue
+                green = decreasing
                 blue = hsv.value
             case 4:
-                red = t
-                green = p
+                red = increasing
+                green = minValue
                 blue = hsv.value
             default:
                 red = hsv.value
-                green = p
-                blue = q
+                green = minValue
+                blue = decreasing
         }
 
         self.init(red: red, green: green, blue: blue, alpha: 1.0)
