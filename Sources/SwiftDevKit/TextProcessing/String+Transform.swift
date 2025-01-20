@@ -97,85 +97,37 @@ extension String: StringTransformable {
             .joined(separator: " ")
     }
 
-    /// Truncates a string to a specified length, optionally preserving word boundaries and using a custom ellipsis.
+    /// Truncates the string to a specified length.
     ///
-    /// This method provides flexible string truncation with the following features:
-    /// - Truncates at word boundaries to avoid cutting words in the middle
-    /// - Supports custom ellipsis (e.g., "..." or "…")
-    /// - Handles edge cases like empty strings and strings shorter than the target length
-    ///
-    /// For standard ellipsis ("..."), it keeps one character of the last word:
+    /// Example:
     /// ```swift
-    /// "This is a long text".truncate(length: 10) // Returns "This i..."
-    /// ```
-    ///
-    /// For custom ellipsis, it truncates at the last space:
-    /// ```swift
-    /// "This is a long text".truncate(length: 10, ellipsis: "…") // Returns "This is…"
+    /// "Hello, World!".truncate(length: 5, ellipsis: "...")  // Returns "Hello..."
     /// ```
     ///
     /// - Parameters:
-    ///   - length: The maximum length of the resulting string, including the ellipsis
-    ///   - smart: Whether to use smart truncation (currently not used, kept for API compatibility)
-    ///   - ellipsis: The string to append to the truncated text (defaults to "...")
-    ///
-    /// - Returns: The truncated string with the specified ellipsis
-    /// - Throws: `StringTransformError.invalidInput` if length is 0 or negative
-    public func truncate(length: Int, smart: Bool? = true, ellipsis: String? = "...") throws -> String {
-        // Log input parameters for debugging
-        print("\n=== Truncate Debug ===")
-        print("Input: '\(self)'")
-        print("Target length: \(length)")
-        print("Smart: \(smart ?? true)")
-        print("Ellipsis: '\(ellipsis ?? "...")'")
-
+    ///   - length: The maximum length of the truncated string (including ellipsis)
+    ///   - ellipsis: The string to append to truncated text
+    /// - Returns: The truncated string
+    /// - Throws: `StringTransformError.transformationFailed` if the transformation fails
+    public func truncate(length: Int, ellipsis: String) throws -> String {
         // Validate input length
         guard length > 0 else {
-            throw StringTransformError.invalidInput("Length must be greater than 0")
+            throw StringTransformError.transformationFailed("Length must be greater than 0")
         }
 
-        // Use default ellipsis if none provided
-        let ellipsisText = ellipsis ?? "..."
-        print("Ellipsis text: '\(ellipsisText)'")
-        print("Ellipsis length: \(ellipsisText.count)")
-
-        // Return original string if it's shorter than target length
+        // If the string is already shorter than the target length, return it as is
         if count <= length {
-            print("Input is shorter than target length, returning as is")
             return self
         }
 
-        // Calculate truncation point
-        print("\nUsing non-smart truncation")
-        let truncateAt = length - ellipsisText.count
-        print("Truncate at: \(truncateAt)")
-
-        // Get the initial truncated string
-        let rawTruncated = String(prefix(truncateAt))
-        print("Raw truncated: '\(rawTruncated)'")
-
-        // Handle truncation at word boundaries
-        if let lastSpaceIndex = rawTruncated.lastIndex(of: " ") {
-            let truncatedAtSpace = String(rawTruncated[..<lastSpaceIndex]).trimmingCharacters(in: .whitespaces)
-
-            // For standard ellipsis ("..."), keep one character of the last word
-            if ellipsisText == "..." {
-                let lastWord = rawTruncated[rawTruncated.index(after: lastSpaceIndex)...]
-                    .trimmingCharacters(in: .whitespaces)
-                let result = truncatedAtSpace + " " + String(lastWord.prefix(1)) + ellipsisText
-                print("Final result (with first char): '\(result)', length: \(result.count)")
-                return result
-            }
-
-            // For custom ellipsis, truncate at the last space
-            print(
-                "Final result (truncated at space): '\(truncatedAtSpace)\(ellipsisText)', length: \(truncatedAtSpace.count + ellipsisText.count)")
-            return truncatedAtSpace + ellipsisText
+        // Calculate where to truncate, accounting for ellipsis length
+        let truncateAt = length - ellipsis.count
+        guard truncateAt > 0 else {
+            // If ellipsis is too long, just return ellipsis truncated to length
+            return String(ellipsis.prefix(length))
         }
 
-        // If no space found, truncate at character boundary
-        print(
-            "Final result (no space found): '\(rawTruncated)\(ellipsisText)', length: \(rawTruncated.count + ellipsisText.count)")
-        return rawTruncated + ellipsisText
+        // Simple truncation at exact character position
+        return String(prefix(truncateAt)) + ellipsis
     }
 }

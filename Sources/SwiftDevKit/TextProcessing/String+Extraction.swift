@@ -77,9 +77,9 @@ public extension String {
         let pattern = schemes
             .map { #"\b\#($0)://[^\s<>\"]+[\w]"# }
             .joined(separator: "|")
-
+        
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return [] }
-
+        
         let range = NSRange(startIndex..., in: self)
         return regex.matches(in: self, range: range)
             .compactMap { match in
@@ -100,7 +100,7 @@ public extension String {
     func extractEmails() -> [String] {
         let pattern = #"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,64}"#
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return [] }
-
+        
         let range = NSRange(startIndex..., in: self)
         return regex.matches(in: self, range: range)
             .compactMap { match in
@@ -122,10 +122,10 @@ public extension String {
     func extractHashtags(includeHash: Bool = true) -> [String] {
         let pattern = #"#[a-zA-Z][a-zA-Z0-9_]*"#
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return [] }
-
+        
         let range = NSRange(startIndex..., in: self)
         let matches = regex.matches(in: self, range: range)
-            .compactMap { (match: NSTextCheckingResult) -> String? in
+            .compactMap { match in
                 guard let range = Range(match.range, in: self) else { return nil }
                 return String(self[range])
             }
@@ -145,10 +145,10 @@ public extension String {
     func extractMentions(includeAt: Bool = true) -> [String] {
         let pattern = #"@[a-zA-Z][a-zA-Z0-9_]*"#
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return [] }
-
+        
         let range = NSRange(startIndex..., in: self)
         let matches = regex.matches(in: self, range: range)
-            .compactMap { (match: NSTextCheckingResult) -> String? in
+            .compactMap { match in
                 guard let range = Range(match.range, in: self) else { return nil }
                 return String(self[range])
             }
@@ -166,15 +166,15 @@ public extension String {
     /// - Returns: An array of strings containing the extracted valid dates
     func extractDates() -> [String] {
         let patterns = [
-            #"\d{4}-\d{2}-\d{2}"#, // YYYY-MM-DD
-            #"\d{2}/\d{2}/\d{4}"#, // MM/DD/YYYY
-            #"\d{2}\.\d{2}\.\d{4}"#, // DD.MM.YYYY
-            #"[A-Za-z]+ \d{1,2}, \d{4}"#, // Month DD, YYYY
+            #"\d{4}-\d{2}-\d{2}"#,              // YYYY-MM-DD
+            #"\d{2}/\d{2}/\d{4}"#,              // MM/DD/YYYY
+            #"\d{2}\.\d{2}\.\d{4}"#,            // DD.MM.YYYY
+            #"[A-Za-z]+ \d{1,2}, \d{4}"#        // Month DD, YYYY
         ]
-
+        
         let combinedPattern = patterns.joined(separator: "|")
         guard let regex = try? NSRegularExpression(pattern: combinedPattern) else { return [] }
-
+        
         let range = NSRange(startIndex..., in: self)
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
@@ -187,12 +187,12 @@ public extension String {
             .filter { dateString in
                 // Try different date formats
                 let formats = [
-                    "yyyy-MM-dd", // YYYY-MM-DD
-                    "MM/dd/yyyy", // MM/DD/YYYY
-                    "dd.MM.yyyy", // DD.MM.YYYY
-                    "MMMM d, yyyy", // Month DD, YYYY
+                    "yyyy-MM-dd",    // YYYY-MM-DD
+                    "MM/dd/yyyy",    // MM/DD/YYYY
+                    "dd.MM.yyyy",    // DD.MM.YYYY
+                    "MMMM d, yyyy"   // Month DD, YYYY
                 ]
-
+                
                 return formats.contains { format in
                     dateFormatter.dateFormat = format
                     return dateFormatter.date(from: dateString) != nil
