@@ -25,3 +25,5 @@ fastlane/screenshots/**/*.png
 fastlane/test_output
 iOSInjectionProject/
 *.generated.swift
+.env
+.vscode/
