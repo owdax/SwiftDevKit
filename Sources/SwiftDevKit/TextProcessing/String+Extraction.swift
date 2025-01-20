@@ -125,7 +125,7 @@ public extension String {
 
         let range = NSRange(startIndex..., in: self)
         let matches = regex.matches(in: self, range: range)
-            .compactMap { match in
+            .compactMap { (match: NSTextCheckingResult) -> String? in
                 guard let range = Range(match.range, in: self) else { return nil }
                 return String(self[range])
             }
@@ -148,7 +148,7 @@ public extension String {
 
         let range = NSRange(startIndex..., in: self)
         let matches = regex.matches(in: self, range: range)
-            .compactMap { match in
+            .compactMap { (match: NSTextCheckingResult) -> String? in
                 guard let range = Range(match.range, in: self) else { return nil }
                 return String(self[range])
             }
