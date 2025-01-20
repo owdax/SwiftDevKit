@@ -4,6 +4,34 @@
 // Copyright (c) 2025 owdax and The SwiftDevKit Contributors
 // MIT License - https://opensource.org/licenses/MIT
 
+/// This file provides comprehensive color conversion utilities for iOS and macOS.
+/// It supports conversion between different color spaces including:
+/// - RGB (Red, Green, Blue)
+/// - HSL (Hue, Saturation, Lightness)
+/// - HSV (Hue, Saturation, Value)
+/// - CMYK (Cyan, Magenta, Yellow, Key/Black)
+/// - Hex string representation
+///
+/// All color components are normalized to the range 0-1, except for hue which uses 0-360 degrees.
+/// The implementation handles color space conversion automatically and works consistently
+/// across UIKit and AppKit.
+///
+/// Example usage:
+/// ```swift
+/// // Create colors from different formats
+/// let redFromHex = Color(hex: "#FF0000")
+/// let greenFromHSL = Color(hsl: HSL(hue: 120, saturation: 1.0, lightness: 0.5))
+/// let blueFromHSV = Color(hsv: HSV(hue: 240, saturation: 1.0, value: 1.0))
+/// let yellowFromCMYK = Color(cmyk: CMYK(cyan: 0, magenta: 0, yellow: 1.0, key: 0))
+///
+/// // Convert colors to different formats
+/// let color = Color.red
+/// let hex = color.toHex() // "#FF0000"
+/// let hsl = color.toHSL() // HSL(hue: 0, saturation: 1.0, lightness: 0.5)
+/// let hsv = color.toHSV() // HSV(hue: 0, saturation: 1.0, value: 1.0)
+/// let cmyk = color.toCMYK() // CMYK(cyan: 0, magenta: 1.0, yellow: 1.0, key: 0)
+/// ```
+
 import Foundation
 #if canImport(UIKit)
     import UIKit
