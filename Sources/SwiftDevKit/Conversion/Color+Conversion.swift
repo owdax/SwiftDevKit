@@ -178,9 +178,9 @@ public extension Color {
             var hueComponent = third
             if hueComponent < 0 { hueComponent += 1 }
             if hueComponent > 1 { hueComponent -= 1 }
-            if hueComponent < 1/6 { return primary + (secondary - primary) * 6 * hueComponent }
-            if hueComponent < 1/2 { return secondary }
-            if hueComponent < 2/3 { return primary + (secondary - primary) * (2/3 - hueComponent) * 6 }
+            if hueComponent < 1 / 6 { return primary + (secondary - primary) * 6 * hueComponent }
+            if hueComponent < 1 / 2 { return secondary }
+            if hueComponent < 2 / 3 { return primary + (secondary - primary) * (2 / 3 - hueComponent) * 6 }
             return primary
         }
 
@@ -190,9 +190,9 @@ public extension Color {
             hsl.lightness + hsl.saturation - hsl.lightness * hsl.saturation
         let primaryComponent = 2 * hsl.lightness - secondaryComponent
 
-        let red = hueToRGB(primaryComponent, secondaryComponent, normalizedHue + 1/3)
+        let red = hueToRGB(primaryComponent, secondaryComponent, normalizedHue + 1 / 3)
         let green = hueToRGB(primaryComponent, secondaryComponent, normalizedHue)
-        let blue = hueToRGB(primaryComponent, secondaryComponent, normalizedHue - 1/3)
+        let blue = hueToRGB(primaryComponent, secondaryComponent, normalizedHue - 1 / 3)
 
         self.init(red: red, green: green, blue: blue, alpha: 1.0)
     }
