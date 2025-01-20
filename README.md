@@ -18,14 +18,34 @@ Think of it as your Swiss Army knife for Swift development - all the tools you n
 
 SwiftDevKit aims to be your go-to toolkit for common development tasks, offering a wide range of functionalities from data conversion to code generation. Our goal is to provide a comprehensive, well-tested, and professionally crafted SDK that brings the power of web-based developer tools natively to Swift.
 
-## Planned Features
+## Features
 
-- 🛠 Comprehensive utility functions
-- 📦 Modular architecture
-- 💻 Native Swift implementation
+### Text Processing
+
+SwiftDevKit provides powerful text processing tools for common string manipulation tasks:
+
+#### String Transformations
+- Case transformations (toTitleCase, toCamelCase, toSnakeCase, toKebabCase)
+- Smart string truncation with customizable length and ellipsis
+- Whitespace handling (removeExcessWhitespace)
+
+#### String Distance Calculations
+- Levenshtein distance for measuring edit distance between strings
+- Jaro-Winkler distance for name matching and fuzzy string comparison
+- Hamming distance for strings of equal length
+
+#### String Extraction
+- Extract numbers (with optional negative number handling)
+- Extract words with minimum length filtering
+- Extract sentences from text
+- Extract URLs with custom scheme filtering
+- Extract email addresses
+- Extract hashtags and mentions (social media style)
+- Extract dates from text
+
+### More Features Coming Soon
 - 🔄 Data conversion tools
 - 🔐 Cryptography utilities
-- 📝 Text processing tools
 - 🎨 Development helpers
 - 📱 Platform-specific optimizations
 
@@ -56,14 +76,17 @@ pod 'SwiftDevKit'
 ## Development Roadmap
 
 1. 🏗 Core Infrastructure (In Progress)
-   - Setting up development tools
-   - Establishing CI/CD pipeline
-   - Code quality tools integration
+   - Setting up development tools ✅
+   - Establishing CI/CD pipeline ✅
+   - Code quality tools integration ✅
 
-2. 🧰 Core Features (Planned)
-   - Data Conversion utilities
-   - Text Processing tools
-   - Development helpers
+2. 🧰 Core Features (In Progress)
+   - Text Processing tools ✅
+     - Case transformations
+     - String truncation
+     - Whitespace handling
+   - Data Conversion utilities (Planned)
+   - Development helpers (Planned)
 
 3. 🔒 Advanced Features (Planned)
    - Cryptography utilities
