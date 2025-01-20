@@ -22,25 +22,26 @@ SwiftDevKit aims to be your go-to toolkit for common development tasks, offering
 
 ### Text Processing
 
-Transform and manipulate strings with ease:
+SwiftDevKit provides powerful text processing tools for common string manipulation tasks:
 
-```swift
-// Case transformations
-"hello world".toTitleCase()      // "Hello World"
-"hello world".toCamelCase()      // "helloWorld"
-"hello world".toSnakeCase()      // "hello_world"
-"hello world".toKebabCase()      // "hello-world"
+#### String Transformations
+- Case transformations (toTitleCase, toCamelCase, toSnakeCase, toKebabCase)
+- Smart string truncation with customizable length and ellipsis
+- Whitespace handling (removeExcessWhitespace)
 
-// String truncation
-let text = "This is a long text that needs to be truncated"
-text.truncate(length: 10)              // "This i..."
-text.truncate(length: 20)              // "This is a long t..."
-text.truncate(length: 10, ellipsis: "…") // "This is…"
-text.truncate(length: 10, ellipsis: "")  // "This is a"
+#### String Distance Calculations
+- Levenshtein distance for measuring edit distance between strings
+- Jaro-Winkler distance for name matching and fuzzy string comparison
+- Hamming distance for strings of equal length
 
-// Whitespace handling
-"hello   world".removeExcessWhitespace()  // "hello world"
-```
+#### String Extraction
+- Extract numbers (with optional negative number handling)
+- Extract words with minimum length filtering
+- Extract sentences from text
+- Extract URLs with custom scheme filtering
+- Extract email addresses
+- Extract hashtags and mentions (social media style)
+- Extract dates from text
 
 ### More Features Coming Soon
 - 🔄 Data conversion tools

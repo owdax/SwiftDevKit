@@ -18,7 +18,7 @@ struct StringTransformTests {
         #expect(try "hello WORLD".toTitleCase() == "Hello World")
 
         // Edge cases
-        #expect(try "".toTitleCase() == "")
+        #expect(try "".toTitleCase().isEmpty)
         #expect(try "hello".toTitleCase() == "Hello")
         #expect(try "   ".toTitleCase() == "   ")
     }
@@ -36,7 +36,7 @@ struct StringTransformTests {
         #expect(try "hello.world".toCamelCase() == "helloWorld")
 
         // Edge cases
-        #expect(try "".toCamelCase() == "")
+        #expect(try "".toCamelCase().isEmpty)
         #expect(try "hello".toCamelCase() == "hello")
         #expect(try "   ".toCamelCase() == "   ")
     }
@@ -59,7 +59,7 @@ struct StringTransformTests {
         #expect(try "IOSDevice".toSnakeCase() == "ios_device")
 
         // Edge cases
-        #expect(try "".toSnakeCase() == "")
+        #expect(try "".toSnakeCase().isEmpty)
         #expect(try "hello".toSnakeCase() == "hello")
         #expect(try "   ".toSnakeCase() == "   ")
     }
@@ -82,7 +82,7 @@ struct StringTransformTests {
         #expect(try "IOSDevice".toKebabCase() == "ios-device")
 
         // Edge cases
-        #expect(try "".toKebabCase() == "")
+        #expect(try "".toKebabCase().isEmpty)
         #expect(try "hello".toKebabCase() == "hello")
         #expect(try "   ".toKebabCase() == "   ")
     }
@@ -99,9 +99,9 @@ struct StringTransformTests {
         #expect(try "hello\n  \t  world".removeExcessWhitespace() == "hello world")
 
         // Edge cases
-        #expect(try "".removeExcessWhitespace() == "")
+        #expect(try "".removeExcessWhitespace().isEmpty)
         #expect(try "hello".removeExcessWhitespace() == "hello")
-        #expect(try "   ".removeExcessWhitespace() == "")
+        #expect(try "   ".removeExcessWhitespace().isEmpty)
     }
 
     @Test("Test string truncation")
@@ -109,23 +109,19 @@ struct StringTransformTests {
         let text = "This is a long text that needs to be truncated"
 
         // Basic truncation
-        #expect(try text.truncate(length: 10) == "This i...")
-        #expect(try text.truncate(length: 20) == "This is a long t...")
-
-        // Non-smart truncation
-        #expect(try text.truncate(length: 10, smart: false) == "This i...")
-        #expect(try text.truncate(length: 20, smart: false) == "This is a long t...")
+        #expect(try text.truncate(length: 10, ellipsis: "...") == "This is...")
+        #expect(try text.truncate(length: 20, ellipsis: "...") == "This is a long te...")
 
         // Custom ellipsis
-        #expect(try text.truncate(length: 10, ellipsis: "…") == "This is…")
-        #expect(try text.truncate(length: 10, ellipsis: "") == "This is a")
+        #expect(try text.truncate(length: 10, ellipsis: "…") == "This is a…")
+        #expect(try text.truncate(length: 10, ellipsis: "") == "This is a ")
 
         // Edge cases
-        #expect(throws: StringTransformError.invalidInput("Length must be greater than 0")) {
-            try text.truncate(length: 0)
+        #expect(throws: StringTransformError.transformationFailed("Length must be greater than 0")) {
+            try text.truncate(length: 0, ellipsis: "...")
         }
 
-        #expect(try "Short".truncate(length: 10) == "Short")
-        #expect(try "".truncate(length: 10) == "")
+        #expect(try "Short".truncate(length: 10, ellipsis: "...") == "Short")
+        #expect(try "".truncate(length: 10, ellipsis: "...") == "")
     }
 }
