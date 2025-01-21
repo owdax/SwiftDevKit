@@ -8,16 +8,22 @@ import Foundation
 
 /// A utility for handling time-related operations with a focus on human-readable formats
 /// and common time calculations.
+///
+/// TimeUtilities provides a set of static functions for:
+/// - Formatting relative times (e.g., "2 hours ago", "in 3 days")
+/// - Formatting durations (e.g., "2 hours, 30 minutes")
+/// - Calculating time remaining
+/// - Checking if dates are within specific time ranges
 public enum TimeUtilities {
     /// Style options for relative time formatting
     public enum RelativeTimeStyle {
-        /// Short style (e.g., "2h ago", "in 3d")
+        /// Short style (e.g., "2h", "3d", "1y")
         case short
-        /// Medium style (e.g., "2 hours ago", "in 3 days")
+        /// Medium style (e.g., "2 hours", "3 days", "1 year")
         case medium
-        /// Long style (e.g., "2 hours and 30 minutes ago", "in 3 days and 12 hours")
+        /// Long style with multiple components (e.g., "2 hours and 30 minutes", "3 days and 12 hours")
         case long
-        /// Precise style with all components (e.g., "2 hours, 30 minutes, and 15 seconds ago")
+        /// Precise style with all components (e.g., "2 hours, 30 minutes, and 15 seconds")
         case precise
     }
 
@@ -44,18 +50,30 @@ public enum TimeUtilities {
         }
     }
 
-    /// Formats a date relative to the current time.
+    /// Formats a date relative to the current time in a human-readable format.
     ///
-    /// Example:
+    /// This function is useful for displaying how long ago something happened or how far in the future it will occur.
+    /// The output format varies based on the style parameter and whether the date is in the past or future.
+    ///
+    /// Examples:
     /// ```swift
-    /// let date = Date().addingTimeInterval(-7200) // 2 hours ago
-    /// let relative = TimeUtilities.relativeTime(from: date, style: .medium)
-    /// print(relative) // "2 hours ago"
+    /// // Past dates
+    /// let twoHoursAgo = Date().addingTimeInterval(-7200)
+    /// TimeUtilities.relativeTime(from: twoHoursAgo, style: .short)  // "2h"
+    /// TimeUtilities.relativeTime(from: twoHoursAgo, style: .medium) // "2 hours"
+    ///
+    /// // Future dates
+    /// let inOneHour = Date().addingTimeInterval(3600)
+    /// TimeUtilities.relativeTime(from: inOneHour, style: .short)  // "in 1h"
+    /// TimeUtilities.relativeTime(from: inOneHour, style: .medium) // "in 1 hour"
+    ///
+    /// // Current time
+    /// TimeUtilities.relativeTime(from: Date(), style: .medium) // "just now"
     /// ```
     ///
     /// - Parameters:
     ///   - date: The date to format
-    ///   - style: The style of the relative time string
+    ///   - style: The style of the relative time string (default: .medium)
     ///   - locale: The locale to use for formatting (default: current)
     /// - Returns: A string representing the relative time
     public static func relativeTime(
@@ -103,15 +121,31 @@ public enum TimeUtilities {
 
     /// Formats a time duration in a human-readable format.
     ///
-    /// Example:
+    /// This function is useful for displaying durations like video lengths, time spent, or time remaining.
+    /// The output format varies based on the style parameter and the duration length.
+    ///
+    /// Examples:
     /// ```swift
-    /// let duration = TimeUtilities.formatDuration(seconds: 7384) // "2 hours, 3 minutes"
+    /// // Short durations
+    /// TimeUtilities.formatDuration(seconds: 45, style: .short)     // "45s"
+    /// TimeUtilities.formatDuration(seconds: 45, style: .medium)    // "45 seconds"
+    ///
+    /// // Medium durations
+    /// TimeUtilities.formatDuration(seconds: 3665, style: .medium)  // "1 hour"
+    /// TimeUtilities.formatDuration(seconds: 3665, style: .long)    // "1 hour, 1 minute"
+    ///
+    /// // Long durations with different styles
+    /// let duration = 7384 // 2 hours, 3 minutes, 4 seconds
+    /// TimeUtilities.formatDuration(seconds: duration, style: .short)    // "2h"
+    /// TimeUtilities.formatDuration(seconds: duration, style: .medium)   // "2 hours"
+    /// TimeUtilities.formatDuration(seconds: duration, style: .long)     // "2 hours, 3 minutes"
+    /// TimeUtilities.formatDuration(seconds: duration, style: .precise)  // "2 hours, 3 minutes, 4 seconds"
     /// ```
     ///
     /// - Parameters:
     ///   - seconds: The duration in seconds
-    ///   - style: The formatting style to use
-    ///   - locale: The locale to use for formatting
+    ///   - style: The formatting style to use (default: .medium)
+    ///   - locale: The locale to use for formatting (default: current)
     /// - Returns: A formatted string representing the duration
     public static func formatDuration(
         seconds: TimeInterval,
@@ -127,18 +161,28 @@ public enum TimeUtilities {
         return formatter.string(from: seconds) ?? "\(Int(seconds))s"
     }
 
-    /// Calculates the time remaining until a future date.
+    /// Calculates and formats the time remaining until a future date.
     ///
-    /// Example:
+    /// This function is useful for countdown displays or showing time remaining until an event.
+    /// Returns nil if the provided date is in the past.
+    ///
+    /// Examples:
     /// ```swift
-    /// let future = Date().addingTimeInterval(7200)
-    /// let remaining = TimeUtilities.timeRemaining(until: future) // "2 hours"
+    /// // Future dates
+    /// let twoHoursLater = Date().addingTimeInterval(7200)
+    /// TimeUtilities.timeRemaining(until: twoHoursLater, style: .short)     // "2h"
+    /// TimeUtilities.timeRemaining(until: twoHoursLater, style: .medium)    // "2 hours"
+    /// TimeUtilities.timeRemaining(until: twoHoursLater, style: .long)      // "2 hours"
+    ///
+    /// // Past dates
+    /// let oneHourAgo = Date().addingTimeInterval(-3600)
+    /// TimeUtilities.timeRemaining(until: oneHourAgo) // nil
     /// ```
     ///
     /// - Parameters:
     ///   - date: The future date
-    ///   - style: The formatting style to use
-    ///   - locale: The locale to use for formatting
+    ///   - style: The formatting style to use (default: .medium)
+    ///   - locale: The locale to use for formatting (default: current)
     /// - Returns: A string representing the time remaining, or nil if the date is in the past
     public static func timeRemaining(
         until date: Date,
@@ -154,16 +198,30 @@ public enum TimeUtilities {
 
     /// Checks if a date is within a specified time unit from now.
     ///
-    /// Example:
+    /// This function is useful for determining if something happened recently or is coming up soon.
+    /// For example, checking if a message was sent within the last hour or if an event is within the next week.
+    ///
+    /// Examples:
     /// ```swift
-    /// let date = Date().addingTimeInterval(-3600) // 1 hour ago
-    /// let isRecent = TimeUtilities.isWithin(date: date, unit: .hours, value: 2) // true
+    /// // Check recent events
+    /// let oneHourAgo = Date().addingTimeInterval(-3600)
+    /// TimeUtilities.isWithin(date: oneHourAgo, unit: .hours, value: 2)    // true
+    /// TimeUtilities.isWithin(date: oneHourAgo, unit: .minutes, value: 30) // false
+    ///
+    /// // Check upcoming events
+    /// let threeDaysLater = Date().addingTimeInterval(259200)
+    /// TimeUtilities.isWithin(date: threeDaysLater, unit: .days, value: 2)  // false
+    /// TimeUtilities.isWithin(date: threeDaysLater, unit: .weeks, value: 1) // true
+    ///
+    /// // Edge cases
+    /// let exactlyTwoHours = Date().addingTimeInterval(-7200)
+    /// TimeUtilities.isWithin(date: exactlyTwoHours, unit: .hours, value: 2) // true
     /// ```
     ///
     /// - Parameters:
     ///   - date: The date to check
     ///   - unit: The time unit to use for comparison
-    ///   - value: The number of units
+    ///   - value: The number of units to check within
     /// - Returns: True if the date is within the specified time range
     public static func isWithin(date: Date, unit: TimeUnit, value: Int) -> Bool {
         let now = Date()
