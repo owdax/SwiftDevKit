@@ -8,11 +8,11 @@ SwiftDevKit aims to be your go-to toolkit for common development tasks, offering
 
 ### Key Features
 
-- Data Conversion Tools
-- Cryptography Utilities
-- Text Processing
-- Development Helpers
-- Platform Utilities
+- Text Processing and String Manipulation
+- Time and TimeZone Utilities
+- Color Conversion Tools
+- Number Formatting
+- Date Conversion
 
 ## Topics
 
@@ -21,11 +21,16 @@ SwiftDevKit aims to be your go-to toolkit for common development tasks, offering
 - <doc:GettingStarted>
 - <doc:Installation>
 
-### Categories
+### Core Features
 
-- ``DataConversion``
-- ``Cryptography``
 - ``TextProcessing``
+- ``TimeUtilities``
+- ``Conversion``
+- ``NumberFormatting``
+
+### Coming Soon
+
+- ``Cryptography``
 - ``DevHelpers``
 - ``PlatformUtils``
 
