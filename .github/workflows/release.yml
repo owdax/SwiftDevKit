@@ -1,0 +1,112 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  prepare:
+    name: Prepare Release
+    runs-on: macos-14
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      is_beta: ${{ steps.version.outputs.is_beta }}
+    
+    steps:
+    - name: Extract Version
+      id: version
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/v}
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        if [[ $VERSION == *"-beta"* ]]; then
+          echo "is_beta=true" >> $GITHUB_OUTPUT
+        else
+          echo "is_beta=false" >> $GITHUB_OUTPUT
+        fi
+
+  validate:
+    name: Validate Release
+    needs: prepare
+    runs-on: macos-14
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Swift
+      uses: SwiftyLab/setup-swift@latest
+      
+    - name: Verify Version File
+      run: |
+        SWIFT_VERSION=$(grep "current = " Sources/SwiftDevKit/Version.swift | cut -d'"' -f2)
+        if [ "$SWIFT_VERSION" != "${{ needs.prepare.outputs.version }}" ]; then
+          echo "Version mismatch: $SWIFT_VERSION != ${{ needs.prepare.outputs.version }}"
+          exit 1
+        fi
+    
+    - name: Run Tests
+      run: swift test -v --enable-code-coverage
+      
+    - name: Generate Documentation
+      run: |
+        swift package --allow-writing-to-directory docs \
+          generate-documentation --target SwiftDevKit \
+          --output-path docs \
+          --transform-for-static-hosting \
+          --hosting-base-path SwiftDevKit
+
+  publish:
+    name: Publish Release
+    needs: [prepare, validate]
+    runs-on: macos-14
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Generate Changelog
+      id: changelog
+      run: |
+        previous_tag=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+        if [ -z "$previous_tag" ]; then
+          echo "# Initial Release" > CHANGELOG.md
+          git log --pretty=format:"* %s" >> CHANGELOG.md
+        else
+          echo "# Changes since $previous_tag" > CHANGELOG.md
+          git log --pretty=format:"* %s" $previous_tag..HEAD >> CHANGELOG.md
+        fi
+    
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        body_path: CHANGELOG.md
+        draft: false
+        prerelease: ${{ needs.prepare.outputs.is_beta }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        files: |
+          LICENSE
+          README.md
+          Package.swift
+    
+    - name: Update Documentation
+      if: needs.prepare.outputs.is_beta != 'true'
+      run: |
+        swift package --allow-writing-to-directory docs \
+          generate-documentation --target SwiftDevKit \
+          --output-path docs \
+          --transform-for-static-hosting \
+          --hosting-base-path SwiftDevKit
+    
+    - name: Deploy Documentation
+      if: needs.prepare.outputs.is_beta != 'true'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs
+        
+    - name: Notify CocoaPods
+      if: needs.prepare.outputs.is_beta != 'true'
+      run: |
+        gem install cocoapods
+        pod trunk push SwiftDevKit.podspec 

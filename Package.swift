@@ -9,7 +9,7 @@ let package = Package(
         .iOS(.v16),
         .macOS(.v13),
         .tvOS(.v16),
-        .watchOS(.v9)
+        .watchOS(.v9),
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -18,7 +18,7 @@ let package = Package(
             targets: ["SwiftDevKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -28,15 +28,12 @@ let package = Package(
             dependencies: [],
             resources: [.process("Resources")],
             swiftSettings: [
-                .define("SWIFT_STRICT_CONCURRENCY", .when(configuration: .debug))
-            ]
-        ),
+                .define("SWIFT_STRICT_CONCURRENCY", .when(configuration: .debug)),
+            ]),
         .testTarget(
             name: "SwiftDevKitTests",
             dependencies: ["SwiftDevKit"],
             swiftSettings: [
-                .define("SWIFT_STRICT_CONCURRENCY", .when(configuration: .debug))
-            ]
-        ),
-    ]
-)
+                .define("SWIFT_STRICT_CONCURRENCY", .when(configuration: .debug)),
+            ]),
+    ])

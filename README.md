@@ -1,16 +1,16 @@
 # SwiftDevKit
 
-[![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)](https://swift.org)
+[![Swift](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
 [![SPM](https://img.shields.io/badge/SPM-compatible-brightgreen.svg)](https://swift.org/package-manager)
 [![Platform](https://img.shields.io/badge/Platforms-iOS%20|%20macOS%20|%20tvOS%20|%20watchOS-lightgrey.svg)](https://developer.apple.com/swift/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-In%20Development-yellow.svg)]()
+[![Status](https://img.shields.io/badge/Status-Beta-yellow.svg)]()
 
 Think of it as your Swiss Army knife for Swift development - all the tools you need, right in your native environment.
 
-> ⚠️ **Project Status**: Active Development
+> ⚠️ **Project Status**: Beta Release
 > 
-> SwiftDevKit is currently in active development. The API is unstable and subject to change. While we're working hard to make it production-ready, it's not recommended for production use yet.
+> SwiftDevKit is currently in beta. While the core features are implemented and tested, the API might undergo refinements based on feedback.
 > 
 > Want to contribute? Check out our [Contributing Guidelines](CONTRIBUTING.md)!
 
@@ -71,36 +71,34 @@ SwiftDevKit provides powerful text processing tools for common string manipulati
 
 ## Installation
 
-> ⚠️ Note: These installation methods will be available once we reach our first stable release.
-
-### Swift Package Manager (Coming Soon)
+### Swift Package Manager
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/owdax/SwiftDevKit.git", from: "1.0.0")
+    .package(url: "https://github.com/owdax/SwiftDevKit.git", from: "0.1.0-beta.1")
 ]
 ```
 
-### CocoaPods (Coming Soon)
+### CocoaPods
 
 ```ruby
-pod 'SwiftDevKit'
+pod 'SwiftDevKit', '0.1.0-beta.1'
 ```
 
 ## Development Roadmap
 
-1. 🏗 Core Infrastructure (In Progress)
+1. 🏗 Core Infrastructure (Completed)
    - Setting up development tools ✅
    - Establishing CI/CD pipeline ✅
    - Code quality tools integration ✅
 
-2. 🧰 Core Features (In Progress)
+2. 🧰 Core Features (Beta)
    - Text Processing tools ✅
      - Case transformations
      - String truncation
      - Whitespace handling
-   - Data Conversion utilities (Planned)
-   - Development helpers (Planned)
+   - Time and TimeZone utilities ✅
+   - Color and Number conversion ✅
 
 3. 🔒 Advanced Features (Planned)
    - Cryptography utilities
