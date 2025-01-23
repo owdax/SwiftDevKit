@@ -5,6 +5,10 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   prepare:
     name: Prepare Release
@@ -59,6 +63,9 @@ jobs:
     name: Publish Release
     needs: [prepare, validate]
     runs-on: macos-14
+    permissions:
+      contents: write
+      pages: write
     
     steps:
     - uses: actions/checkout@v4
