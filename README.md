@@ -29,11 +29,6 @@ SwiftDevKit provides powerful text processing tools for common string manipulati
 - Smart string truncation with customizable length and ellipsis
 - Whitespace handling (removeExcessWhitespace)
 
-#### String Distance Calculations
-- Levenshtein distance for measuring edit distance between strings
-- Jaro-Winkler distance for name matching and fuzzy string comparison
-- Hamming distance for strings of equal length
-
 #### String Extraction
 - Extract numbers (with optional negative number handling)
 - Extract words with minimum length filtering
@@ -43,10 +38,29 @@ SwiftDevKit provides powerful text processing tools for common string manipulati
 - Extract hashtags and mentions (social media style)
 - Extract dates from text
 
-### More Features Coming Soon
-- 🔄 Data conversion tools
+### Time Utilities
+- Comprehensive timezone management and conversions
+- Time formatting and parsing
+- Date and time calculations
+- Time interval operations
+
+### Conversion Utilities
+- Color conversions (RGB, HSL, HSB, Hex)
+- Number formatting with locale support
+- Date formatting and parsing
+- Numeric string conversions
+- Custom string conversion protocols
+
+### Currently Implemented
+- ✅ Text Processing (String transformations and extraction)
+- ✅ Time and TimeZone utilities
+- ✅ Color conversion
+- ✅ Number formatting
+- ✅ Date conversion
+
+### Coming Soon
 - 🔐 Cryptography utilities
-- 🎨 Development helpers
+- 🎨 Additional development helpers
 - 📱 Platform-specific optimizations
 
 ## Requirements
