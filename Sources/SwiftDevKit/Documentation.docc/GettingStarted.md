@@ -4,13 +4,13 @@ Learn how to use SwiftDevKit's powerful features for text processing, time utili
 
 ## Overview
 
-SwiftDevKit provides a comprehensive set of tools for common development tasks, including string manipulation, time handling, and various data conversion utilities.
+SwiftDevKit provides a comprehensive set of tools for common development tasks, including string manipulation, time handling, and various data conversion utilities. Built with Swift 6's latest features, it offers a modern, safe, and efficient development experience.
 
 ## Requirements
 
-- iOS 13.0+ / macOS 10.15+ / tvOS 13.0+ / watchOS 6.0+
+- iOS 16.0+ / macOS 13.0+ / tvOS 16.0+ / watchOS 9.0+
 - Xcode 16.0+
-- Swift 5.9+
+- Swift 6.0+
 
 ## Basic Setup
 
@@ -18,7 +18,7 @@ Add SwiftDevKit to your project using Swift Package Manager:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/owdax/SwiftDevKit.git", from: "1.0.0")
+    .package(url: "https://github.com/owdax/SwiftDevKit.git", from: "0.1.0-beta.1")
 ]
 ```
 

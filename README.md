@@ -65,9 +65,9 @@ SwiftDevKit provides powerful text processing tools for common string manipulati
 
 ## Requirements
 
-- iOS 13.0+ / macOS 10.15+ / tvOS 13.0+ / watchOS 6.0+
+- iOS 16.0+ / macOS 13.0+ / tvOS 16.0+ / watchOS 9.0+
 - Xcode 16.0+
-- Swift 5.9+
+- Swift 6.0+
 
 ## Installation
 
