@@ -14,13 +14,13 @@ SwiftDevKit provides comprehensive number formatting capabilities through the ``
 let number = 1234.5678
 
 // Basic formatting (2 decimals, with grouping)
-try number.formatted()  // "1,234.57"
+try number.asDecimal()  // "1,234.56"
 
 // Custom decimals
-try number.formatted(decimals: 4)  // "1,234.5678"
+try number.asDecimal(decimals: 4)  // "1,234.5678"
 
 // Without grouping
-try number.formatted(grouping: false)  // "1234.57"
+try number.asDecimal(grouping: false)  // "1234.56"
 ```
 
 ### File Size Formatting
@@ -103,9 +103,6 @@ All formatting methods support localization through the `locale` parameter:
 
 ```swift
 let germanLocale = Locale(identifier: "de_DE")
-
-// Numbers
-try 1234.56.formatted(locale: germanLocale)  // "1.234,56"
 
 // File sizes
 try 1_234_567_890.asFileSize(locale: germanLocale)  // "1,23 GB"

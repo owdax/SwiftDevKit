@@ -240,20 +240,23 @@ struct NumberFormattingTests {
         let number = 1234.5678
 
         // Default formatting (2 decimals, with grouping)
-        let formatted = try number.formatted()
+        let formatted = try number.asDecimal()
         #expect(formatted == "1,234.56")
 
         // Custom decimals
-        let precise = try number.formatted(decimals: 4)
+        let precise = try number.asDecimal(decimals: 4)
         #expect(precise == "1,234.5678")
 
         // Without grouping
-        let ungrouped = try number.formatted(grouping: false)
+        let ungrouped = try number.asDecimal(grouping: false)
         #expect(ungrouped == "1234.56")
 
         // Custom rounding
-        let rounded = try number.formatted(decimals: 2, roundingRule: .down)
-        #expect(rounded == "1,234.56")
+        let rounded = try number.asDecimal(decimals: 2, roundingRule: .halfUp)
+        #expect(rounded == "1,234.57")
+
+        // Integers default to no decimals
+        #expect(try 1_234_567.asDecimal() == "1,234,567")
     }
 
     @Test("Test accounting format")
