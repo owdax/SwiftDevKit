@@ -17,7 +17,7 @@ import Foundation
 /// let number = 1234.5678
 ///
 /// // Basic formatting
-/// try number.formatted(decimals: 2)  // "1,234.57"
+/// try number.asDecimal(decimals: 2)  // "1,234.56"
 ///
 /// // File size
 /// try (1_234_567_890).asFileSize()  // "1.23 GB"
@@ -38,12 +38,12 @@ public protocol NumberFormattable {
     /// Formats the number with specified options.
     ///
     /// - Parameters:
-    ///   - decimals: Number of decimal places (default: 2)
+    ///   - decimals: Number of decimal places (default: 2), or 0 for integers
     ///   - grouping: Whether to use grouping separators (default: true)
-    ///   - roundingRule: The rounding rule to apply (default: .toNearestOrEven)
+    ///   - roundingRule: The rounding rule to apply (default: .down)
     /// - Returns: A formatted string representation
     /// - Throws: `NumberFormattingError` if formatting fails
-    func formatted(
+    func asDecimal(
         decimals: Int?,
         grouping: Bool?,
         roundingRule: NumberFormatter.RoundingMode?) throws -> String
@@ -298,17 +298,12 @@ public enum NumberFormattingError: Error, LocalizedError, Equatable {
 // MARK: - Default Implementation
 
 public extension NumberFormattable {
-    /// Formats the number using default options.
-    ///
-    /// Default formatting uses:
-    /// - 2 decimal places
-    /// - Grouping separators enabled
-    /// - Rounds to nearest or even
+    /// Formats the number using the conforming type's default options.
     ///
     /// - Returns: A formatted string representation
     /// - Throws: `NumberFormattingError` if formatting fails
-    func formatted() throws -> String {
-        try formatted(decimals: 2, grouping: true, roundingRule: .halfUp)
+    func asDecimal() throws -> String {
+        try asDecimal(decimals: nil, grouping: nil, roundingRule: nil)
     }
 
     func asPercentage(
