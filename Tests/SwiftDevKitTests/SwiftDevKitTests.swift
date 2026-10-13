@@ -11,19 +11,19 @@ import Testing
 // MARK: - Core Tests
 
 @Test
-func versionTest() async throws {
+func versionTest() {
     #expect(SwiftDevKit.version == "1.0.0", "Version should match the current release")
 }
 
 @Test
-func environmentValidationTest() async throws {
+func environmentValidationTest() {
     #expect(SwiftDevKit.isEnvironmentValid, "Environment should be valid on supported platforms")
 }
 
 // MARK: - Platform Support Tests
 
 @Test
-func platformSupportTest() async throws {
+func platformSupportTest() {
     #if os(iOS)
         #expect(SwiftDevKit.isEnvironmentValid, "Should support iOS")
     #elseif os(macOS)

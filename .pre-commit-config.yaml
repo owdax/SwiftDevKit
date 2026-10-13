@@ -1,0 +1,25 @@
+# Git hooks, run by prek (https://github.com/j178/prek). pre-commit also reads this file.
+# Setup: brew install prek swiftformat swiftlint swiftgen && prek install
+# Run on everything: prek run --all-files
+repos:
+  - repo: local
+    hooks:
+      - id: swiftgen
+        name: SwiftGen
+        entry: scripts/swiftgen.sh
+        language: system
+        files: ^(swiftgen\.yml|Sources/SwiftDevKit/Resources/)
+        pass_filenames: false
+
+      - id: swiftformat
+        name: SwiftFormat
+        entry: swiftformat --quiet
+        language: system
+        types: [swift]
+        exclude: ^Sources/SwiftDevKit/Generated/
+
+      - id: swiftlint
+        name: SwiftLint
+        entry: swiftlint lint --quiet --force-exclude
+        language: system
+        types: [swift]

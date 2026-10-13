@@ -11,7 +11,7 @@ import Testing
 @Suite("Date Conversion Tests")
 struct DateConversionTests {
     @Test("Test date string conversion with various formats")
-    func testDateStringConversion() async throws {
+    func dateStringConversion() async throws {
         let date = Date(timeIntervalSince1970: 1_705_363_800) // 2024-01-16 00:10:00 UTC
 
         // Test ISO8601
@@ -38,7 +38,7 @@ struct DateConversionTests {
     }
 
     @Test("Test date conversion error handling")
-    func testDateConversionErrors() async throws {
+    func dateConversionErrors() async throws {
         // Test invalid format
         await #expect(throws: DateConversionError.invalidFormat("invalid")) {
             try await Date.fromString("invalid", format: DateFormat.iso8601)

@@ -56,7 +56,7 @@ struct TimeUtilitiesTests {
     }
 
     @Test("Test duration formatting")
-    func testDurationFormatting() throws {
+    func durationFormatting() {
         // Test different durations
         let shortDuration = TimeUtilities.formatDuration(seconds: 45, style: TimeUtilities.RelativeTimeStyle.short)
         #expect(shortDuration.contains("45s") || shortDuration.contains("45 sec"))
@@ -77,7 +77,7 @@ struct TimeUtilitiesTests {
     }
 
     @Test("Test time remaining calculation")
-    func testTimeRemaining() throws {
+    func testTimeRemaining() {
         let now = Date()
 
         // Test future date
@@ -101,7 +101,7 @@ struct TimeUtilitiesTests {
     }
 
     @Test("Test isWithin function")
-    func testIsWithin() throws {
+    func testIsWithin() {
         let now = Date()
 
         // Test within range

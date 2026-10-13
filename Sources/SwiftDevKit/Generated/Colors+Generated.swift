@@ -1,21 +1,15 @@
-// Colors+Generated.swift
-// SwiftDevKit
-//
-// Copyright (c) 2025 owdax and The SwiftDevKit Contributors
-// MIT License - https://opensource.org/licenses/MIT
-
 // swiftlint:disable all
 // Generated using SwiftGen — https://github.com/SwiftGen/SwiftGen
 
 #if os(macOS)
-    import AppKit
+  import AppKit
 #elseif os(iOS)
-    import UIKit
+  import UIKit
 #elseif os(tvOS) || os(watchOS)
-    import UIKit
+  import UIKit
 #endif
 #if canImport(SwiftUI)
-    import SwiftUI
+  import SwiftUI
 #endif
 
 // Deprecated typealiases
@@ -25,21 +19,20 @@
 // MARK: - Asset Catalogs
 
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
-public enum Colors {}
-
+public enum Colors {
+}
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
 
 // MARK: - Implementation Details
 
 // swiftlint:disable convenience_type
 private final class BundleToken {
-    static let bundle: Bundle = {
-        #if SWIFT_PACKAGE
-            return Bundle.module
-        #else
-            return Bundle(for: BundleToken.self)
-        #endif
-    }()
+  static let bundle: Bundle = {
+    #if SWIFT_PACKAGE
+    return Bundle.module
+    #else
+    return Bundle(for: BundleToken.self)
+    #endif
+  }()
 }
-
 // swiftlint:enable convenience_type

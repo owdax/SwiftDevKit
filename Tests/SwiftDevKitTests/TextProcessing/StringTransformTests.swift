@@ -11,7 +11,7 @@ import Testing
 @Suite("String Transform Tests")
 struct StringTransformTests {
     @Test("Test title case transformation")
-    func testTitleCase() throws {
+    func titleCase() throws {
         // Basic title case
         #expect(try "hello world".toTitleCase() == "Hello World")
         #expect(try "HELLO WORLD".toTitleCase() == "Hello World")
@@ -24,7 +24,7 @@ struct StringTransformTests {
     }
 
     @Test("Test camel case transformation")
-    func testCamelCase() throws {
+    func camelCase() throws {
         // Basic camel case
         #expect(try "hello world".toCamelCase() == "helloWorld")
         #expect(try "Hello World".toCamelCase() == "helloWorld")
@@ -42,7 +42,7 @@ struct StringTransformTests {
     }
 
     @Test("Test snake case transformation")
-    func testSnakeCase() throws {
+    func snakeCase() throws {
         // Basic snake case
         #expect(try "hello world".toSnakeCase() == "hello_world")
         #expect(try "helloWorld".toSnakeCase() == "hello_world")
@@ -65,7 +65,7 @@ struct StringTransformTests {
     }
 
     @Test("Test kebab case transformation")
-    func testKebabCase() throws {
+    func kebabCase() throws {
         // Basic kebab case
         #expect(try "hello world".toKebabCase() == "hello-world")
         #expect(try "helloWorld".toKebabCase() == "hello-world")

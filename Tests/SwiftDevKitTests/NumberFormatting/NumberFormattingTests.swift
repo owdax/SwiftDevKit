@@ -11,7 +11,7 @@ import Testing
 @Suite("Number Formatting Tests")
 struct NumberFormattingTests {
     @Test("Test percentage formatting")
-    func testPercentageFormatting() throws {
+    func percentageFormatting() throws {
         // Basic percentage
         let number = 0.425
         let formatted = try number.asPercentage(decimals: 1)
@@ -29,7 +29,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test currency formatting")
-    func testCurrencyFormatting() throws {
+    func currencyFormatting() throws {
         let number = 1234.56
 
         // US Dollars
@@ -48,7 +48,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test scientific notation formatting")
-    func testScientificFormatting() throws {
+    func scientificFormatting() throws {
         let number = 1234.5678
 
         // Default formatting (2 decimals)
@@ -66,7 +66,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test ordinal number formatting")
-    func testOrdinalFormatting() throws {
+    func ordinalFormatting() throws {
         // Basic ordinals
         #expect(try 1.asOrdinal() == "1st")
         #expect(try 2.asOrdinal() == "2nd")
@@ -81,7 +81,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test number spelling")
-    func testNumberSpelling() throws {
+    func numberSpelling() throws {
         let number = 1234
 
         // Default formatting
@@ -99,7 +99,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test compact notation formatting")
-    func testCompactNotation() throws {
+    func compactNotation() throws {
         if #available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *) {
             let number = 1_234_567
 
@@ -115,7 +115,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test binary formatting")
-    func testBinaryFormatting() throws {
+    func binaryFormatting() throws {
         let number = 42
 
         // Basic binary
@@ -136,7 +136,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test hexadecimal formatting")
-    func testHexFormatting() throws {
+    func hexFormatting() throws {
         let number = 255
 
         // Basic hex
@@ -157,7 +157,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test Roman numeral formatting")
-    func testRomanFormatting() throws {
+    func romanFormatting() throws {
         // Basic numbers
         #expect(try 1.asRoman() == "I")
         #expect(try 4.asRoman() == "IV")
@@ -187,7 +187,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test octal formatting")
-    func testOctalFormatting() throws {
+    func octalFormatting() throws {
         let number = 342_391
 
         // Basic octal
@@ -208,7 +208,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test custom base formatting")
-    func testBaseFormatting() throws {
+    func baseFormatting() throws {
         let number = 255
 
         // Base 3
@@ -236,7 +236,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test basic decimal formatting")
-    func testBasicDecimalFormatting() throws {
+    func basicDecimalFormatting() throws {
         let number = 1234.5678
 
         // Default formatting (2 decimals, with grouping)
@@ -267,7 +267,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test accounting format")
-    func testAccountingFormat() throws {
+    func accountingFormat() throws {
         // Positive number
         let positive = 1234.56
         let positiveFormat = try positive.asAccounting(code: "USD")
@@ -293,7 +293,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test file size formatting")
-    func testFileSizeFormatting() throws {
+    func fileSizeFormatting() throws {
         // Basic file size
         let bytes = 1_234_567_890
         let formatted = try bytes.asFileSize()
@@ -314,7 +314,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test duration formatting")
-    func testDurationFormatting() throws {
+    func durationFormatting() throws {
         let seconds = 9045 // 2h 30m 45s
 
         // Abbreviated style
@@ -332,7 +332,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test fraction formatting")
-    func testFractionFormatting() throws {
+    func fractionFormatting() throws {
         // Simple fractions
         #expect(try 1.5.asFraction() == "1 1/2")
         #expect(try 0.75.asFraction() == "3/4")
@@ -348,7 +348,7 @@ struct NumberFormattingTests {
     }
 
     @Test("Test unit formatting")
-    func testUnitFormatting() throws {
+    func unitFormatting() throws {
         if #available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *) {
             let distance = 5.2
 

@@ -1,7 +1,7 @@
 // FoundationCompatibilityTests.swift
 // SwiftDevKit
 //
-// Copyright (c) 2025 owdax and The SwiftDevKit Contributors
+// Copyright (c) 2026 owdax and The SwiftDevKit Contributors
 // MIT License - https://opensource.org/licenses/MIT
 
 import Foundation
@@ -13,7 +13,7 @@ import Testing
 @Suite("Foundation Compatibility Tests")
 struct FoundationCompatibilityTests {
     @Test("Foundation's formatted() stays non-throwing")
-    func testFoundationFormattedIsNotShadowed() {
+    func foundationFormattedIsNotShadowed() {
         let int: String = 1_234_567.formatted()
         let double: String = 1234.5678.formatted()
 

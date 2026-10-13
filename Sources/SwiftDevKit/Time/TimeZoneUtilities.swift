@@ -162,7 +162,7 @@ public enum TimeZoneUtilities {
     ///
     /// - Returns: A dictionary with regions as keys and arrays of time zone identifiers as values
     public static func commonTimeZones() -> [String: [String]] {
-        let common = [
+        [
             "America": [
                 "America/New_York",
                 "America/Los_Angeles",
@@ -209,8 +209,6 @@ public enum TimeZoneUtilities {
                 "Africa/Casablanca",
             ],
         ]
-
-        return common
     }
 
     /// Returns the GMT offset for a given time zone at a specific date.

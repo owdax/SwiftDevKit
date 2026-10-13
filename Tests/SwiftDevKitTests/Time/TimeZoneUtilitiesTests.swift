@@ -11,7 +11,7 @@ import Testing
 @Suite("Time Zone Utilities Tests")
 struct TimeZoneUtilitiesTests {
     @Test("Test time zone conversion")
-    func testTimeZoneConversion() throws {
+    func timeZoneConversion() throws {
         let date = Date(timeIntervalSince1970: 1_705_881_600) // Jan 22, 2024 00:00:00 UTC
         guard let utc = TimeZone(identifier: "UTC"),
               let ny = TimeZone(identifier: "America/New_York"),
@@ -42,7 +42,7 @@ struct TimeZoneUtilitiesTests {
     }
 
     @Test("Test date formatting with time zones")
-    func testDateFormatting() throws {
+    func dateFormatting() throws {
         let date = Date(timeIntervalSince1970: 1_705_881_600) // Jan 22, 2024 00:00:00 UTC
         guard let tokyo = TimeZone(identifier: "Asia/Tokyo"),
               let ny = TimeZone(identifier: "America/New_York")
@@ -83,7 +83,7 @@ struct TimeZoneUtilitiesTests {
     }
 
     @Test("Test GMT offset formatting")
-    func testOffsetFormatting() throws {
+    func offsetFormatting() throws {
         guard let tokyo = TimeZone(identifier: "Asia/Tokyo"),
               let ny = TimeZone(identifier: "America/New_York"),
               let utc = TimeZone(identifier: "UTC")
@@ -117,7 +117,7 @@ struct TimeZoneUtilitiesTests {
     }
 
     @Test("Test DST detection")
-    func testDSTDetection() throws {
+    func dSTDetection() throws {
         guard let ny = TimeZone(identifier: "America/New_York"),
               let tokyo = TimeZone(identifier: "Asia/Tokyo"),
               let utc = TimeZone(identifier: "UTC")
@@ -159,7 +159,7 @@ struct TimeZoneUtilitiesTests {
     }
 
     @Test("Test all time zones")
-    func testAllTimeZones() throws {
+    func testAllTimeZones() {
         let zones = TimeZoneUtilities.allTimeZones()
 
         // Test structure
@@ -187,7 +187,7 @@ struct TimeZoneUtilitiesTests {
     }
 
     @Test("Test common time zones")
-    func testCommonTimeZones() throws {
+    func testCommonTimeZones() {
         let zones = TimeZoneUtilities.commonTimeZones()
 
         // Test structure

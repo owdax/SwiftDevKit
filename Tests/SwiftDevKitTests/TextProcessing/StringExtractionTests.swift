@@ -11,7 +11,7 @@ import Testing
 @Suite("String Extraction Tests")
 struct StringExtractionTests {
     @Test("Test number extraction")
-    func testNumberExtraction() throws {
+    func numberExtraction() {
         let text = "The price is $19.99 and quantity is -42"
 
         // With negative numbers
@@ -27,7 +27,7 @@ struct StringExtractionTests {
     }
 
     @Test("Test word extraction")
-    func testWordExtraction() throws {
+    func wordExtraction() {
         let text = "Hello, World! How are you?"
 
         // Default minimum length
@@ -42,7 +42,7 @@ struct StringExtractionTests {
     }
 
     @Test("Test sentence extraction")
-    func testSentenceExtraction() throws {
+    func sentenceExtraction() {
         let text = "Hello! How are you? I'm doing great."
 
         let sentences = text.extractSentences()
@@ -57,7 +57,7 @@ struct StringExtractionTests {
     }
 
     @Test("Test URL extraction")
-    func testURLExtraction() throws {
+    func uRLExtraction() {
         let text = "Visit https://www.example.com or http://test.com or ftp://files.com"
 
         // Default schemes (http, https)
@@ -73,7 +73,7 @@ struct StringExtractionTests {
     }
 
     @Test("Test email extraction")
-    func testEmailExtraction() throws {
+    func emailExtraction() {
         let text = "Contact us at info@example.com or support@test.com"
 
         let emails = text.extractEmails()
@@ -87,7 +87,7 @@ struct StringExtractionTests {
     }
 
     @Test("Test hashtag extraction")
-    func testHashtagExtraction() throws {
+    func hashtagExtraction() {
         let text = "Check out #SwiftDev and #iOS15 features!"
 
         // With hash symbol
@@ -104,7 +104,7 @@ struct StringExtractionTests {
     }
 
     @Test("Test mention extraction")
-    func testMentionExtraction() throws {
+    func mentionExtraction() {
         let text = "Thanks @john and @jane_doe!"
 
         // With @ symbol
@@ -121,7 +121,7 @@ struct StringExtractionTests {
     }
 
     @Test("Test date extraction")
-    func testDateExtraction() throws {
+    func dateExtraction() {
         let text = """
         Meeting on 2024-01-16
         Party on 01/20/2024
