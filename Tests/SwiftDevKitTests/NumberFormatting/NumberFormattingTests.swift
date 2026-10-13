@@ -257,6 +257,13 @@ struct NumberFormattingTests {
 
         // Integers default to no decimals
         #expect(try 1_234_567.asDecimal() == "1,234,567")
+
+        // Generic callers get the same defaults as concrete ones
+        func genericDecimal(_ value: some NumberFormattable) throws -> String {
+            try value.asDecimal()
+        }
+        #expect(try genericDecimal(number) == "1,234.56")
+        #expect(try genericDecimal(1_234_567) == "1,234,567")
     }
 
     @Test("Test accounting format")

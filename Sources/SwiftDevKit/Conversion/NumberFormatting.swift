@@ -51,7 +51,7 @@ public protocol NumberFormattable {
     /// Formats the number as a percentage.
     ///
     /// - Parameters:
-    ///   - decimals: Number of decimal places (default: 2), or 0 for integers
+    ///   - decimals: Number of decimal places (default: 2)
     ///   - locale: The locale to use for formatting (default: current)
     /// - Returns: A formatted percentage string (e.g., "42.5%")
     /// - Throws: `NumberFormattingError` if formatting fails
@@ -73,7 +73,7 @@ public protocol NumberFormattable {
     /// Formats the number in scientific notation.
     ///
     /// - Parameters:
-    ///   - decimals: Number of decimal places (default: 2), or 0 for integers
+    ///   - decimals: Number of decimal places (default: 2)
     ///   - locale: The locale to use for formatting (default: current)
     /// - Returns: A scientific notation string (e.g., "1.23E4")
     /// - Throws: `NumberFormattingError` if formatting fails
@@ -298,6 +298,14 @@ public enum NumberFormattingError: Error, LocalizedError, Equatable {
 // MARK: - Default Implementation
 
 public extension NumberFormattable {
+    /// Formats the number using the conforming type's default options.
+    ///
+    /// - Returns: A formatted string representation
+    /// - Throws: `NumberFormattingError` if formatting fails
+    func asDecimal() throws -> String {
+        try asDecimal(decimals: nil, grouping: nil, roundingRule: nil)
+    }
+
     func asPercentage(
         decimals: Int? = 2,
         locale: Locale? = .current) throws -> String
